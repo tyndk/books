@@ -51,6 +51,7 @@ $config = [
                 'view' => 'books/view',
                 'update' => 'books/update',
                 'reg' => 'registration/register',
+                'authors' => 'books/authors',
             ],
         ],
 
