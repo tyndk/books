@@ -17,9 +17,9 @@ use yii\grid\GridView;
 $this->title = 'Список книг';
 
 $genres = [
-    'option1' => 'Детектив',
-    'option2' => 'Фентези',
-    'option3' => 'Поэма',
+    'Детектив' => 'Детектив',
+    'Фентези' => 'Фентези',
+    'Поэма' => 'Поэма',
 ];
 
 $authors = Authors::find()->all();
@@ -40,7 +40,7 @@ foreach ($authors as $el) {
     </div>
     <div class="container px-3 mt-3 col-md-4">
     <?php $form = ActiveForm::begin(['id' => 'book-form', 'action' => ['books/add'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-    <?= $form->field($author, 'name')->dropDownList($authors_el) ?> <!-- ['class' => 'form-control', 'list' => 'authors']) ?> -->
+    <?= $form->field($model, 'author_id')->dropDownList($authors_el) ?> <!-- ['class' => 'form-control', 'list' => 'authors']) ?> -->
     <datalist id='authors'>
         <?php foreach ($authors as $item) : ?>
             <option value="<?= $item->name ?>"></option>
@@ -48,7 +48,7 @@ foreach ($authors as $el) {
     </datalist>
     <?= $form->field($model, 'title')->textInput(['class' => 'form-control']) ?>
     <?= $form->field($model, 'year')->input('number', ['class' => 'form-control']) ?>
-    <?= $form->field($model, 'genre')->dropDownList($genres + ['other' => 'Своё'], ['class' => 'form-control']) ?>
+    <?= $form->field($model, 'genre')->dropDownList($genres, ['class' => 'form-control']) ?>
     <?= $form->field($model, 'image')->fileInput(['class' => 'form-control']) ?>
     <?= $form->field($model, 'pages')->input('number', ['class' => 'form-control']) ?>
     <?= Html::submitButton('Добавить', ['class' => 'mt-3 w-100 btn btn-primary', 'name' => 'book-button']) ?>

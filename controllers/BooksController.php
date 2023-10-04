@@ -63,33 +63,36 @@ class BooksController extends \yii\web\Controller
     public function actionAdd()
     {
         $model = new Books();
-        $author = Author::findOne($id); // Здесь $authorId - ID автора из таблицы
-        $authors_el = ArrayHelper::map(Author::find()->all(), 'id', 'name'); // Предполагая, что 'id' и 'name' - это поля в таблице Author
+        $authors = Authors::find()->all();
 
         //$author = Authors::findOne($id); //new Authors();
 
         if (Yii::$app->request->isPost) 
         {
-            if ($model->load(Yii::$app->request->post()))// && $author->load(Yii::$app->request->post()))
+            if ($model->load(Yii::$app->request->post())) // && $model->validate())// && $author->load(Yii::$app->request->post()))
             {
-                //$authorName = $author->name;
-                //$author->save();
-                $model->author_id = $author->id;
+                $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
+                $author = Authors::findOne($selectedAuthorId);
 
-                $imagePath = $this->uploadImage($model);
+                if ($author)
+                {
+                    $model->author_id = $author->id;            
 
-                if ($imagePath !== null)
-                {
-                    Yii::$app->session->setFlash('success', 'Книга добавлена');
+                    $imagePath = $this->uploadImage($model);
+
+                    if ($imagePath !== null)
+                    {
+                        Yii::$app->session->setFlash('success', 'Книга добавлена');
+                        return $this->redirect(['/books']);
+                    }
+                    else
+                    {
+                        Yii::$app->session->setFlash('error', 'Ошибка при сохранении книги: '. implode(', ', array_values($model->getFirstErrors())));
+                        return $this->redirect(['/books']);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Выбранный автор не найден.');
                     return $this->redirect(['/books']);
-                    
-                }
-                else
-                {
-                    Yii::$app->session->setFlash('error', 'Ошибка при сохранении книги: '. implode(', ', array_values($model->getFirstErrors())));
-                    //var_dump($authorName);
-                    return $this->redirect(['/books']);
-                    //return false;
                 }
             }
         } 
@@ -100,7 +103,7 @@ class BooksController extends \yii\web\Controller
         return $this->render('list', [
             'model' => $model,
             'books' => $el,
-            'author' => $author
+            'authors' => $authors
         ]);
         }
     }

@@ -13,14 +13,20 @@ $dataProvider = new ActiveDataProvider([
 
 <h2>Все книги <?= $model->author->name ?></h2>
 
+<div class="row row-cols-1 row-cols-md-5 g-4">
 <?php
 foreach ($dataProvider->models as $book) { ?>
-    <ul>
-        <li><a href="<?= Url::toRoute(['view', 'id'=>$model->id]) ?>"><?= $book->title ?></a></li>
-    </ul>
+ <div class="col">
+    <div class="card h-100">
+        <img src="../uploads/<?= $book->image ?>" class="img-fluid rounded-start" alt="<?= $book->title ?>">
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="<?= Url::toRoute(['view', 'id'=>$model->id]) ?>"><?= $book->title ?></a>
+            </h5>
+        </div>
+    </div>
+ </div>
 <?php } ?>
-
-
-
+</div>
 
 
