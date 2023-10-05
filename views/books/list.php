@@ -16,12 +16,6 @@ use yii\grid\GridView;
 
 $this->title = 'Список книг';
 
-$genres = [
-    'Детектив' => 'Детектив',
-    'Фентези' => 'Фентези',
-    'Поэма' => 'Поэма',
-];
-
 $authors = Authors::find()->all();
 $authors_el = [];
 foreach ($authors as $el) {
@@ -48,7 +42,7 @@ foreach ($authors as $el) {
     </datalist>
     <?= $form->field($model, 'title')->textInput(['class' => 'form-control']) ?>
     <?= $form->field($model, 'year')->input('number', ['class' => 'form-control']) ?>
-    <?= $form->field($model, 'genre')->dropDownList($genres, ['class' => 'form-control']) ?>
+    <?= $form->field($model, 'genre')->dropDownList(Yii::$app->GenresArray->genres, ['class' => 'form-control']) ?>
     <?= $form->field($model, 'image')->fileInput(['class' => 'form-control']) ?>
     <?= $form->field($model, 'pages')->input('number', ['class' => 'form-control']) ?>
     <?= Html::submitButton('Добавить', ['class' => 'mt-3 w-100 btn btn-primary', 'name' => 'book-button']) ?>

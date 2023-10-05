@@ -12,6 +12,8 @@ use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
+/** @var \app\models\Books|null $model */
+
 class BooksController extends \yii\web\Controller
 {
 
@@ -135,9 +137,11 @@ class BooksController extends \yii\web\Controller
         {
             throw new NotFoundHttpException('Запись не найдена :(');
         }
-        else if ($model->load(Yii::$app->request->post()) && $author->load(Yii::$app->request->post()))
+        else if ($model->load(Yii::$app->request->post()))// && $author->load(Yii::$app->request->post()))
         {
-            $author->save();
+            $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
+            $author = Authors::findOne($selectedAuthorId);
+
             $model->author_id = $author->id;
             $imagePath = $this->uploadImage($model);
 
@@ -149,6 +153,7 @@ class BooksController extends \yii\web\Controller
             else
             {
                 Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirsErrors())));
+                return $this->redirect('books');
             }
         }
 

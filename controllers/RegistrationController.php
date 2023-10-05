@@ -13,9 +13,12 @@ class RegistrationController extends Controller
     {
         $model = new RegistrationForm();
 
-        if ($model->load(Yii::$app->request->post() && $model->register())) {
-            $model->save();
-            return $this->redirect(['index']);
+        if (Yii::$app->request->isPost) 
+        {
+            if ($model->load(Yii::$app->request->post() && $model->register())) {
+                $model->save();
+                return $this->redirect('books');
+            }
         }
 
         return $this->render('/site/register', ['model' => $model]);

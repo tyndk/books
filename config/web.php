@@ -1,5 +1,7 @@
 <?php
 
+use app\components\GenresArray;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -63,6 +65,10 @@ $config = [
                     'cachePath' => '@runtime/blade_cache', // Путь к кэшу Blade
                 ],
             ],
+        ],
+
+        'GenresArray' => [
+          'class' => 'app\components\GenresArray',  
         ],
         
     ],
