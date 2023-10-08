@@ -14,6 +14,7 @@ use yii\base\Model;
 class LoginForm extends Model
 {
     public $username;
+    //public $email;
     public $password;
     public $rememberMe = true;
 
@@ -47,8 +48,8 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if (!$user || !Yii::$app->security->validatePassword($this->password, $user->password)) {
+                $this->addError($attribute, 'Неверный логин или пароль.');
             }
         }
     }
@@ -77,5 +78,15 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'Имя пользователя',
+            //'email' => 'Email',
+            'password' => 'Пароль',
+            'rememberMe' => 'Запомнить меня',
+        ];
     }
 }

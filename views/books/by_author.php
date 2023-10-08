@@ -1,17 +1,29 @@
 <?php
 use app\models\Authors;
+use app\models\Books;
 use yii\data\ActiveDataProvider;
+use yii\bootstrap5\ActiveForm;
 use yii\helpers\Url;
-
-$book = $model->id;
-
-// Используем ActiveDataProvider для получения книг этого автора
-$dataProvider = new ActiveDataProvider([
-    'query' => Authors::findOne($model)->getBooks(), // Получаем связанные книги автора
-]);
+use yii\helpers\Html;
 ?>
 
-<h2>Все книги <?= $model->author->name ?></h2>
+<div class="d-flex justify-content-start">
+        <h2>Все книги <b id="headingAuthor"><?= $author->name ?></b></h2>
+        <div class="form-group d-flex">
+            <?php $form = ActiveForm::begin(['id' => 'formUpdate', 'action' => ['authors/update', 'id' => $author->id], 'options' => ['class' => 'd-none m-1']]); ?>
+                <?= $form->field($author, 'name')->textInput(['placeholder' => $author->getAttributeLabel('name')])->label(false) ?>
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary btn-sm']) ?>
+            <?php ActiveForm::end(); ?>
+            </div>
+        <div class="p-2">
+            <button  id="editButton" class="btn btn-primary btn-sm">Изменить</button>
+            <button  id="cancelButton" class="btn btn-danger btn-sm d-none">Отменить</button>
+            
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Удалить
+            </button>
+        </div>
+</div>
 
 <div class="row row-cols-1 row-cols-md-5 g-4">
 <?php
@@ -21,7 +33,7 @@ foreach ($dataProvider->models as $book) { ?>
         <img src="../uploads/<?= $book->image ?>" class="img-fluid rounded-start" alt="<?= $book->title ?>">
         <div class="card-body">
             <h5 class="card-title">
-                <a href="<?= Url::toRoute(['view', 'id'=>$model->id]) ?>"><?= $book->title ?></a>
+                <a href="<?= Url::toRoute(['view', 'id'=>$book->id]) ?>"><?= $book->title ?></a>
             </h5>
         </div>
     </div>
@@ -29,4 +41,40 @@ foreach ($dataProvider->models as $book) { ?>
 <?php } ?>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Внимание</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Удаление автора удалит и книги.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Отмена</button>
+        <a href="<?= Url::toRoute(['/authors/delete', 'id'=>$author->id]) ?>"><button class="btn btn-danger btn-sm">Удалить</button></a>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
+    // Обработчик нажатия на кнопку "Редактировать"
+        document.getElementById('editButton').addEventListener('click', function() {
+        document.getElementById('headingAuthor').classList.toggle('d-none');
+        document.getElementById('formUpdate').classList.toggle('d-none');
+        document.getElementById('editButton').classList.toggle('d-none');
+        document.getElementById('cancelButton').classList.toggle('d-none');
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        document.getElementById('headingAuthor').classList.toggle('d-none');
+        document.getElementById('formUpdate').classList.toggle('d-none');
+        document.getElementById('editButton').classList.toggle('d-none');
+        document.getElementById('cancelButton').classList.toggle('d-none');
+    });
+</script>
+
+<!-- <a href="<?= Url::toRoute(['update', 'id'=>$author->id]) ?>"><button  id="editButton" class="btn btn-primary btn-sm">Изменить</button></a> -->

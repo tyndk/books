@@ -40,7 +40,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            '<ul class="nav me-auto">',
+            '<ul class="nav me-auto">', // [controller/function]
             ['label' => 'Главная', 'url' => ['/site/index']],// 'options' => ['class' => 'text-dark']],
             ['label' => 'Список книг', 'url' => ['/books/list']],
             ['label' => 'Список авторов', 'url' => ['/books/authors']],
@@ -48,12 +48,12 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             '</ul>',
             '<ul class="nav">',
             Yii::$app->user->isGuest
-                ? ['label' => 'Войти', 'url' => ['/registration/register']]
+                ? ['label' => 'Регистрация', 'url' => ['/site/reg']]
                 : '<li class="nav-item">'
                     . Html::beginForm(['/site/logout'])
                     . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
+                        'Выйти (' . Yii::$app->user->identity->username . ')',
+                        ['class' => 'nav-link btn btn-link']
                     )
                     . Html::endForm()
                     . '</li>',

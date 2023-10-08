@@ -25,7 +25,7 @@ foreach ($authors as $el) {
 ?>
 <div class="site-about">
    
-<?php if (Yii::$app->user->isGuest) 
+<?php if (!Yii::$app->user->isGuest) 
         { ?>
 <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="secondary">
   <div class="bg-secondary p-4 rounded w-75 m-auto">
@@ -102,8 +102,8 @@ foreach ($authors as $el) {
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {delete}', // Опционально: кнопки действий
                 'visibleButtons' => [
-                    'update' => Yii::$app->user->isGuest,
-                    'delete' => Yii::$app->user->isGuest
+                    'update' => !Yii::$app->user->isGuest,
+                    'delete' => !Yii::$app->user->isGuest
                     ]
             ],
         ],

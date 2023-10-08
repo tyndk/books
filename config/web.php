@@ -52,7 +52,7 @@ $config = [
                 'books' => 'books/list',
                 'view' => 'books/view',
                 'update' => 'books/update',
-                'reg' => 'registration/register',
+                'reg' => 'site/register',
                 'authors' => 'books/authors',
             ],
         ],

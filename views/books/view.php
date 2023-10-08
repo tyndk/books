@@ -16,7 +16,7 @@ use yii\helpers\Url;
     <div class="col-md-8 pb-3">
       <div class="card-body">
         <h5 class="card-title">"<?= $model->title ?>"</h5>
-        <p class="card-text">Эту книгу написал <b><a href="<?= Url::toRoute(['by_author', 'id'=>$model->id]) ?>"><?= $model->author->name ?></a></b> в <b><?= $model->year ?></b> году.</p>
+        <p class="card-text">Эту книгу написал <b><a href="<?= Url::toRoute(['by_author', 'id'=>$model->author_id]) ?>"><?= $model->author->name ?></a></b> в <b><?= $model->year ?></b> году.</p>
         <p class="card-text">Жанр: <b><?= $model->genre ?></b></p>
 
   

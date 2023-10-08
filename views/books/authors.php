@@ -2,12 +2,17 @@
 /** @var app\models\Authors $author */
 
 use app\models\Authors;
+use app\models\Books;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 
 $authors = Authors::find()->all();
+// $model = Books::find()->all();
+// $dataProvider = new ActiveDataProvider([
+//     'query' => Authors::findOne($model)->getBooks(), // Получаем связанные книги автора
+// ]);
 ?>
 
 <div class="bg-secondary p-4 rounded w-75 m-auto">
@@ -22,7 +27,14 @@ $authors = Authors::find()->all();
     </div>
 </div>
 
-
-
-
+<div class="container w-75 m-auto pt-5">
+    <h3>Список авторов</h3>
+    <ul class="list-group">
+    <?php foreach($authors as $el) { ?>
+        <li class="list-group-item">
+            <a href="<?= Url::toRoute(['by_author', 'id'=>$el->id]) ?>"><?= $el->name ?></a>
+        </li>
+    <?php } ?>
+    </ul>
+</div>
 

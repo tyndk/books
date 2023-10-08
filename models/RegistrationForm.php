@@ -16,26 +16,30 @@ class RegistrationForm extends Model
         return [
             [['username', 'email', 'password'], 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => 'app\models\User', 'message' => 'Этот email занят.'],
+            ['email', 'unique', 'targetClass' => 'app\models\User', 'targetAttribute' => 'email', 'message' => 'Этот email занят.'],
             ['password', 'string', 'min' => 6],
         ];
     }
 
-    public function register()
-    {
-        if ($this->validate()) {
-            $user = new User();
-            $user->username = $this->username;
-            $user->email = $this->email;
-            $user->setPassword($this->password);
-            $user->generateAuthKey();
+    // public function register()
+    // {
+    //     if ($this->validate()) {
+    //         $user = new User();
+    //         $user->username = $this->username;
+    //         $user->email = $this->email;
+    //         $user->setPassword($this->password);
+    //         $user->generateAuthKey();
 
-            if ($user->save()) {
-                return true;
-            }
-        }
-        return false;
-    }
+    //         if ($user->save()) {
+    //             return true;
+    //         }
+    //         else
+    //         {
+    //             Yii::$app->session->setFlash('error', 'Ошибка при создании пользователя.');
+    //         }
+    //     }
+    //     return false;
+    // }
 
     public function attributeLabels()
     {

@@ -22,15 +22,20 @@ class BooksController extends \yii\web\Controller
     {
         $model->image = UploadedFile::getInstance($model, 'image');
 
-        if ($model->save() && $model->image)
+        if ($model->image)
         {
-            $imagePath = 'uploads/' . $model->image->baseName . '.' . $model->image->extension;
+            $randomFileName = Yii::$app->security->generateRandomString(10);
+            $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension; //$model->image->baseName
             
             if ($model->image->saveAs($imagePath))
             {
-                $model->image = null;
-                
-                return $imagePath;
+                $model->image = $randomFileName . '.' . $model->image->extension;
+
+                if ($model->save()){
+                    return $imagePath;
+                } else {
+                    //ошибка в бд
+                }
             }
             else
             {
@@ -78,7 +83,7 @@ class BooksController extends \yii\web\Controller
 
                 if ($author)
                 {
-                    $model->author_id = $author->id;            
+                    $model->author_id = $author->id;
 
                     $imagePath = $this->uploadImage($model);
 
@@ -123,11 +128,24 @@ class BooksController extends \yii\web\Controller
     public function actionDelete($id)
     {
         $model = Books::findOne($id);
+        $file = 'uploads/' . $model->image; // $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension; //$model->image->baseName
+
+        if (file_exists($file))
+        {
+            if (unlink($file))
+            {
+                Yii::$app->session->setFlash('success', 'Картинка ' . $file . ' книги удалена');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
+        }
+
         $model->delete();
 
         return $this->redirect(['/books']); //(Yii::$app->request->referrer);
     }
 
+    
     public function actionUpdate($id)
     {
         $model = Books::findOne($id);
@@ -165,17 +183,25 @@ class BooksController extends \yii\web\Controller
 
     public function actionBy_author($id)
     {
-        $model = Books::findOne($id);
-        $author = $model->author->name;
+        $author = Authors::findOne($id); // Находим автора по идентификатору
 
-        return $this->render('by_author', [
-            'model' => $model,
-            'author' => $author
+        if ($author !== null) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $author->getBooks(), // Получаем связанные книги автора
             ]);
+    
+            return $this->render('by_author', [
+                'dataProvider' => $dataProvider,
+                'author' => $author,
+            ]);
+        } else {
+            throw new NotFoundHttpException('Автор не найден.');
+        }
     }
 
     public function actionAuthors()
     {
+        $model = Books::find()->all();
         $author = new Authors();
 
         if (Yii::$app->request->isPost) 
@@ -184,11 +210,12 @@ class BooksController extends \yii\web\Controller
             {
                 $authorName = $author->name;
                 $author->save();
-                return $this->redirect(['/books']);
+                return $this->redirect(['/authors']);
             }
         }
 
         return $this->render('authors', [
+            'model' => $model,
             'author' => $author
             ]);
     }

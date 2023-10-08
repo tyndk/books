@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\RegistrationForm;
+use app\models\User;
 
 class SiteController extends Controller
 {
@@ -77,13 +79,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->goHome();//goBack();
         }
 
-        $model->password = '';
-        return $this->render('login', [
+        return $this->render('auth', [
             'model' => $model,
         ]);
+
     }
 
     /**
@@ -124,5 +126,36 @@ class SiteController extends Controller
     public function actionBooks()
     {
         return $this->render('..\books\books');
+    }
+
+    public function actionReg()
+    {
+        $model = new RegistrationForm();
+        $user = new User();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user->username = $model->username;
+            //var_dump($model->username); exit;
+            $user->email = $model->email;
+            $user->password = Yii::$app->security->generatePasswordHash($model->password);
+
+            if ($user->save()) {
+                Yii::$app->user->login($user);
+                Yii::$app->session->setFlash('success', 'Добро пожаловать, ' . $user->username . '!');
+                return $this->goHome();//redirect(['index']);
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка при регистрации: ' . implode(', ', array_values($model->getFirstErrors())));
+            }
+
+        }
+
+        return $this->render('register', ['model' => $model]);
+    }
+
+    public function actionAuth()
+    {
+        $model = new RegistrationForm();
+        
+        return $this->render('auth', ['model' => $model]);
     }
 }

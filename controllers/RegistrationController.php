@@ -16,11 +16,17 @@ class RegistrationController extends Controller
         if (Yii::$app->request->isPost) 
         {
             if ($model->load(Yii::$app->request->post() && $model->register())) {
-                $model->save();
-                return $this->redirect('books');
+                //$model->save();
+                return $this->redirect(['books']);
             }
-        }
+            else
+            {
+                Yii::$app->session->setFlash('error', 'Ошибка: ' . implode(', ', array_values($model->getFirstErrors())));
+            }
+        } 
+        
 
-        return $this->render('/site/register', ['model' => $model]);
+        return $this->redirect('../site/index');
+        //return $this->render('/site/register', ['model' => $model]);
     }
 }

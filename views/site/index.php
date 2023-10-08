@@ -12,6 +12,7 @@ $this->title = 'My Yii Application';
         <h1 class="display-4">Books!</h1>
 
         <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p>Авторизован - <?php echo $nickname; ?>?</p>
 
         <p><a class="btn btn-lg btn-primary" href="<?= Url::toRoute('/books/list', $schema = true) ?>">Просмотр книг</a></p>
     </div>
