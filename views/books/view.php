@@ -19,9 +19,11 @@ use yii\helpers\Url;
         <p class="card-text">Эту книгу написал <b><a href="<?= Url::toRoute(['by_author', 'id'=>$model->author_id]) ?>"><?= $model->author->name ?></a></b> в <b><?= $model->year ?></b> году.</p>
         <p class="card-text">Жанр: <b><?= $model->genre ?></b></p>
 
-  
+        <?php if (!Yii::$app->user->isGuest) 
+        { ?>
         <a href="<?= Url::toRoute(['update', 'id'=>$model->id]) ?>"><button class="btn btn-primary">Изменить</button></a>
         <a href="<?= Url::toRoute(['delete', 'id'=>$model->id]) ?>"><button class="btn btn-danger">Удалить</button></a>
+        <?php } ?>
      </div>
     </div>
   </div>

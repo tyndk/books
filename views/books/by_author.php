@@ -15,14 +15,15 @@ use yii\helpers\Html;
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary btn-sm']) ?>
             <?php ActiveForm::end(); ?>
             </div>
+
+    <?php if (!Yii::$app->user->isGuest) 
+        { ?>
         <div class="p-2">
             <button  id="editButton" class="btn btn-primary btn-sm">Изменить</button>
             <button  id="cancelButton" class="btn btn-danger btn-sm d-none">Отменить</button>
-            
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Удалить
-            </button>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
         </div>
+  <?php } ?>
 </div>
 
 <div class="row row-cols-1 row-cols-md-5 g-4">
@@ -61,7 +62,6 @@ foreach ($dataProvider->models as $book) { ?>
 </div>
 
 <script>
-    // Обработчик нажатия на кнопку "Редактировать"
         document.getElementById('editButton').addEventListener('click', function() {
         document.getElementById('headingAuthor').classList.toggle('d-none');
         document.getElementById('formUpdate').classList.toggle('d-none');

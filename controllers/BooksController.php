@@ -4,7 +4,7 @@ namespace app\controllers;
 use app\models\Books;
 use app\models\BooksSearch;
 use app\models\Authors;
-use yii\helpers\ArrayHelper; // Импорт класса ArrayHelper
+use yii\helpers\ArrayHelper;
 use PharIo\Manifest\Author;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -25,7 +25,7 @@ class BooksController extends \yii\web\Controller
         if ($model->image)
         {
             $randomFileName = Yii::$app->security->generateRandomString(10);
-            $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension; //$model->image->baseName
+            $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension;
             
             if ($model->image->saveAs($imagePath))
             {
@@ -34,12 +34,12 @@ class BooksController extends \yii\web\Controller
                 if ($model->save()){
                     return $imagePath;
                 } else {
-                    //ошибка в бд
+                    Yii::$app->session->setFlash('error', 'Ошибка при загрузке картинки: '. implode(', ', array_values($model->getFirstErrors())));
                 }
             }
             else
             {
-                Yii::$app->session->setFlash('error', 'Ошибка при загрузке картинки: '. implode(', ', array_values($model->getFirsErrors())));
+                Yii::$app->session->setFlash('error', 'Ошибка при загрузке картинки: '. implode(', ', array_values($model->getFirstErrors())));
             }
         }
 
@@ -72,11 +72,9 @@ class BooksController extends \yii\web\Controller
         $model = new Books();
         $authors = Authors::find()->all();
 
-        //$author = Authors::findOne($id); //new Authors();
-
         if (Yii::$app->request->isPost) 
         {
-            if ($model->load(Yii::$app->request->post())) // && $model->validate())// && $author->load(Yii::$app->request->post()))
+            if ($model->load(Yii::$app->request->post()))
             {
                 $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
                 $author = Authors::findOne($selectedAuthorId);
@@ -128,7 +126,7 @@ class BooksController extends \yii\web\Controller
     public function actionDelete($id)
     {
         $model = Books::findOne($id);
-        $file = 'uploads/' . $model->image; // $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension; //$model->image->baseName
+        $file = 'uploads/' . $model->image;
 
         if (file_exists($file))
         {
@@ -142,36 +140,38 @@ class BooksController extends \yii\web\Controller
 
         $model->delete();
 
-        return $this->redirect(['/books']); //(Yii::$app->request->referrer);
+        return $this->redirect(['/books']);
     }
 
     
     public function actionUpdate($id)
     {
         $model = Books::findOne($id);
-        $author= Authors::findOne($model->author_id);//$model->author->name;
+        $author= Authors::findOne($model->author_id);
+        $oldImage = 'uploads/' . $model->image;
 
         if (!$model)
         {
             throw new NotFoundHttpException('Запись не найдена :(');
         }
-        else if ($model->load(Yii::$app->request->post()))// && $author->load(Yii::$app->request->post()))
+        else if ($model->load(Yii::$app->request->post()))
         {
             $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
             $author = Authors::findOne($selectedAuthorId);
 
             $model->author_id = $author->id;
             $imagePath = $this->uploadImage($model);
-
+            
             if ($imagePath !== null)
             {
+                unlink($oldImage);
                 Yii::$app->session->setFlash('success', 'Книга изменена');
                 return $this->redirect('books');
             }
             else
             {
-                Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirsErrors())));
-                return $this->redirect('books');
+                Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirstErrors())));
+                return $this->refresh();
             }
         }
 
@@ -183,11 +183,11 @@ class BooksController extends \yii\web\Controller
 
     public function actionBy_author($id)
     {
-        $author = Authors::findOne($id); // Находим автора по идентификатору
+        $author = Authors::findOne($id);
 
         if ($author !== null) {
             $dataProvider = new ActiveDataProvider([
-                'query' => $author->getBooks(), // Получаем связанные книги автора
+                'query' => $author->getBooks(),
             ]);
     
             return $this->render('by_author', [

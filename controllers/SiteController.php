@@ -142,7 +142,7 @@ class SiteController extends Controller
             if ($user->save()) {
                 Yii::$app->user->login($user);
                 Yii::$app->session->setFlash('success', 'Добро пожаловать, ' . $user->username . '!');
-                return $this->goHome();//redirect(['index']);
+                return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка при регистрации: ' . implode(', ', array_values($model->getFirstErrors())));
             }

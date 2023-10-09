@@ -15,6 +15,8 @@ $authors = Authors::find()->all();
 // ]);
 ?>
 
+<?php if (!Yii::$app->user->isGuest) 
+        { ?>
 <div class="bg-secondary p-4 rounded w-75 m-auto">
     <div class="container px-3 py-1">
         <h3 class="px-3">Добавьте автора</h3><hr>
@@ -26,6 +28,11 @@ $authors = Authors::find()->all();
     <?php ActiveForm::end(); ?>
     </div>
 </div>
+<?php } else { ?>
+    <div class="alert alert-primary" role="alert">
+        Чтобы добавить авторов авторизуйтесь.
+    </div>
+<?php } ?>
 
 <div class="container w-75 m-auto pt-5">
     <h3>Список авторов</h3>

@@ -44,6 +44,6 @@ class AuthorsController extends \yii\web\Controller
         
         Yii::$app->session->setFlash('error', 'Автор ' . $author->name . ' с его книгами удален.');
 
-        return $this->redirect(['/authors']); //(Yii::$app->request->referrer);
+        return $this->redirect(['/authors']);
     }
 }

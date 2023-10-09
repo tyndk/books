@@ -7,14 +7,14 @@ use yii\helpers\Url;
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
-
-    <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Books!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-        <p>Авторизован - <?php //echo $nickname; ?>?</p>
-
-        <p><a class="btn btn-lg btn-primary" href="<?= Url::toRoute('/books/list', $schema = true) ?>">Просмотр книг</a></p>
+    <div class="container mt-5">
+        <h1 class="display-4">Добро пожаловать на сайт "Библиотека"</h1>
+        <p class="lead">На этом сайте вы можете управлять книгами и авторами:</p>
+        <ul class="lead">
+            <li>Добавлять, редактировать и удалять книги, авторов (CRUD операции).</li>
+            <li>Добавление и изменение записей доступно после регистрации.</li>
+        </ul>
+        <p class="lead">Главные ссылки указаны в шапке сайта.</p>
+        <!-- <p><a class="btn btn-lg btn-primary" href="<?= Url::toRoute('/books/list', $schema = true) ?>">Просмотр книг</a></p> -->
     </div>
-
 </div>

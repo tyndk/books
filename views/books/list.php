@@ -34,7 +34,7 @@ foreach ($authors as $el) {
     </div>
     <div class="container px-3 mt-3 col-md-4">
     <?php $form = ActiveForm::begin(['id' => 'book-form', 'action' => ['books/add'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-    <?= $form->field($model, 'author_id')->dropDownList($authors_el) ?> <!-- ['class' => 'form-control', 'list' => 'authors']) ?> -->
+    <?= $form->field($model, 'author_id')->dropDownList($authors_el) ?>
     <datalist id='authors'>
         <?php foreach ($authors as $item) : ?>
             <option value="<?= $item->name ?>"></option>
@@ -58,22 +58,20 @@ foreach ($authors as $el) {
     </button>
   </div>
 </nav>
+<?php } else { ?>
+    <div class="alert alert-primary" role="alert">
+        Чтобы добавить книги авторизуйтесь.
+    </div>
 <?php } ?>
-
 
 <div class="container mt-5">
 <h2>Все записи: </h2>
     <?php
-    // $dataProvider = new ActiveDataProvider([
-    //     'query' => Books::find(),
-    // ]);
-    // $searchModel = new Books;
-    
     $grid = GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'], // Номер строки
+            ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'author_id',
                 'value' => function ($model) {
@@ -97,10 +95,9 @@ foreach ($authors as $el) {
                 'attribute' => 'pages',
                 'filter' => Html::activeTextInput($searchModel, 'pages', ['class' => 'form-control']),
             ],
-            // Другие столбцы, которые вы хотите отобразить
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {delete}', // Опционально: кнопки действий
+                'template' => '{view} {update} {delete}',
                 'visibleButtons' => [
                     'update' => !Yii::$app->user->isGuest,
                     'delete' => !Yii::$app->user->isGuest
