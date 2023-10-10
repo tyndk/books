@@ -210,7 +210,7 @@ class BooksController extends \yii\web\Controller
             {
                 $authorName = $author->name;
                 $author->save();
-                return $this->redirect(['/authors']);
+                return $this->refresh();
             }
         }
 

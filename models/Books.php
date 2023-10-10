@@ -57,29 +57,29 @@ class Books extends \yii\db\ActiveRecord
         ];
     }
 
-    public function search($params)
-    {
-        $query = Books::find();
+    // public function search($params)
+    // {
+    //     $query = Books::find();
 
-        $query->joinWith('author');
+    //     $query->joinWith('author');
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+    //     $dataProvider = new ActiveDataProvider([
+    //         'query' => $query,
+    //     ]);
 
-        if (!($this->load($params) && $this->validate())) {
-            return $dataProvider;
-        }
+    //     if (!($this->load($params) && $this->validate())) {
+    //         return $dataProvider;
+    //     }
 
-        $query->andFilterWhere(['id' => $this->id]);
-        $query->andFilterWhere(['like', 'author_id', $this->author->name]);
-        $query->andFilterWhere(['like', 'title', $this->title]);
-        $query->andFilterWhere(['year' => $this->year]);
-        $query->andFilterWhere(['like', 'genre', $this->genre]);
-        $query->andFilterWhere(['pages' => $this->pages]);
+    //     $query->andFilterWhere(['id' => $this->id]);
+    //     $query->andFilterWhere(['like', 'author_id', $this->author->name]);
+    //     $query->andFilterWhere(['like', 'title', $this->title]);
+    //     $query->andFilterWhere(['year' => $this->year]);
+    //     $query->andFilterWhere(['like', 'genre', $this->genre]);
+    //     $query->andFilterWhere(['pages' => $this->pages]);
 
-        return $dataProvider;
-    }
+    //     return $dataProvider;
+    // }
 
     public function getAuthor()
     {
