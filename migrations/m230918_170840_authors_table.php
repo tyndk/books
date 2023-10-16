@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m230918_170840_authors_table
+ * Class m230901_2_authors_table
  */
-class m230918_170840_authors extends Migration
+class m230901_2_authors_table extends Migration
 {
     /**
      * {@inheritdoc}

@@ -26,7 +26,7 @@ class m230911_181749_books_table extends Migration
             'fk-books-author_id',
             'books',
             'author_id',
-            'author',
+            'authors',
             'id',
             'CASCADE'
         );
