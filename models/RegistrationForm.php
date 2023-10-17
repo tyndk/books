@@ -21,26 +21,6 @@ class RegistrationForm extends Model
         ];
     }
 
-    // public function register()
-    // {
-    //     if ($this->validate()) {
-    //         $user = new User();
-    //         $user->username = $this->username;
-    //         $user->email = $this->email;
-    //         $user->setPassword($this->password);
-    //         $user->generateAuthKey();
-
-    //         if ($user->save()) {
-    //             return true;
-    //         }
-    //         else
-    //         {
-    //             Yii::$app->session->setFlash('error', 'Ошибка при создании пользователя.');
-    //         }
-    //     }
-    //     return false;
-    // }
-
     public function attributeLabels()
     {
         return [
