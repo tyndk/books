@@ -11,10 +11,10 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\base\Security;
+use yii\base\UserException;
 use yii\mail\MessageInterface;
 use yii\web\Application;
 use yii\web\ErrorHandler;
-use yii\web\HttpException;
 use yii\web\Request;
 use yii\web\Response as YiiResponse;
 
@@ -40,7 +40,7 @@ class Yii2 extends Client
     /**
      * Clean the response object by resetting specific properties via its' `clear()` method.
      * This will keep behaviors / event handlers, but could inadvertently leave some changes intact.
-     * @see \Yii\web\Response::clear()
+     * @see \yii\web\Response::clear()
      */
     const CLEAN_CLEAR = 'clear';
 
@@ -116,7 +116,7 @@ class Yii2 extends Client
         }
         Yii::$app = null;
         \yii\web\UploadedFile::reset();
-        if (method_exists(\yii\base\Event::className(), 'offAll')) {
+        if (method_exists(\yii\base\Event::class, 'offAll')) {
             \yii\base\Event::offAll();
         }
         Yii::setLogger(null);
@@ -276,7 +276,7 @@ class Yii2 extends Client
         return is_array($params) ?$this->getApplication()->getUrlManager()->createUrl($params) : $params;
     }
 
-    public function startApp()
+    public function startApp(\yii\log\Logger $logger = null)
     {
         codecept_debug('Starting application');
         $config = require($this->configFile);
@@ -297,7 +297,12 @@ class Yii2 extends Client
         $config = $this->mockMailer($config);
         /** @var \yii\base\Application $app */
         Yii::$app = Yii::createObject($config);
-        Yii::setLogger(new Logger());
+
+        if ($logger !== null) {
+            Yii::setLogger($logger);
+        } else {
+            Yii::setLogger(new Logger());
+        }
     }
 
     /**
@@ -306,7 +311,7 @@ class Yii2 extends Client
      *
      * @return \Symfony\Component\BrowserKit\Response
      */
-    public function doRequest($request)
+    public function doRequest(object $request)
     {
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
@@ -328,7 +333,7 @@ class Yii2 extends Client
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['QUERY_STRING'] = (string)$queryString;
 
-        parse_str($queryString, $params);
+        parse_str($queryString ?: '', $params);
         foreach ($params as $k => $v) {
             $_GET[$k] = $v;
         }
@@ -367,7 +372,7 @@ class Yii2 extends Client
             $app->trigger($app::EVENT_AFTER_REQUEST);
             $response->send();
         } catch (\Exception $e) {
-            if ($e instanceof HttpException) {
+            if ($e instanceof UserException) {
                 // Don't discard output and pass exception handling to Yii to be able
                 // to expect error response codes in tests.
                 $app->errorHandler->discardExistingOutput = false;

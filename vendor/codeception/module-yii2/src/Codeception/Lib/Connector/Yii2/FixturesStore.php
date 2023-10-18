@@ -29,7 +29,9 @@ class FixturesStore
     public function globalFixtures()
     {
         return [
-            InitDbFixture::className()
+            'initDbFixture' => [
+                'class' => InitDbFixture::class,
+            ],
         ];
     }
 }

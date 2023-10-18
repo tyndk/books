@@ -32,7 +32,7 @@ class Filesystem extends Module
 
     protected string $path = '';
 
-    public function _before(TestInterface $test)
+    public function _before(TestInterface $test): void
     {
         $this->path = Configuration::projectDir();
     }
@@ -43,14 +43,18 @@ class Filesystem extends Module
      */
     public function amInPath(string $path): void
     {
-        chdir($this->path = $this->absolutizePath($path) . DIRECTORY_SEPARATOR);
+        $this->path = $this->absolutizePath($path) . DIRECTORY_SEPARATOR;
+        if (!file_exists($this->path)) {
+            TestCase::fail('directory not found');
+        }
+        chdir($this->path);
         $this->debug('Moved to ' . getcwd());
     }
 
     protected function absolutizePath(string $path): string
     {
         // *nix way
-        if (strpos($path, '/') === 0) {
+        if (str_starts_with($path, '/')) {
             return $path;
         }
 
@@ -75,7 +79,11 @@ class Filesystem extends Module
      */
     public function openFile(string $filename): void
     {
-        $this->file = file_get_contents($this->absolutizePath($filename));
+        $absolutePath = $this->absolutizePath($filename);
+        if (!file_exists($absolutePath)) {
+            TestCase::fail('file not found');
+        }
+        $this->file = file_get_contents($absolutePath);
         $this->filePath = $filename;
     }
 
@@ -89,11 +97,12 @@ class Filesystem extends Module
      */
     public function deleteFile(string $filename): void
     {
-        if (!file_exists($this->absolutizePath($filename))) {
+        $absolutePath = $this->absolutizePath($filename);
+        if (!file_exists($absolutePath)) {
             TestCase::fail('file not found');
         }
 
-        unlink($this->absolutizePath($filename));
+        unlink($absolutePath);
     }
 
     /**
@@ -264,7 +273,7 @@ class Filesystem extends Module
      * @throws AssertionFailedError When path does not exist
      * @return string|false Path to the first matching file
      */
-    private function findFileInPath(string $filename, string $path)
+    private function findFileInPath(string $filename, string $path): string|false
     {
         $path = $this->absolutizePath($path);
         if (!file_exists($path)) {

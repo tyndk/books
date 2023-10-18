@@ -9,7 +9,8 @@ use Codeception\Stub\ConsecutiveMap;
 use Codeception\Stub\StubMarshaler;
 use Exception;
 use LogicException;
-use PHPUnit\Framework\MockObject\Generator;
+use PHPUnit\Framework\MockObject\Generator as LegacyGenerator;
+use PHPUnit\Framework\MockObject\Generator\Generator;
 use PHPUnit\Framework\MockObject\MockObject as PHPUnitMockObject;
 use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 use PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
@@ -92,17 +93,6 @@ class Stub
 
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflection);
-    }
-
-    /**
-     * Set __mock flag, if at all possible
-     */
-    private static function markAsMock(object $mock, ReflectionClass $reflection): object
-    {
-        if (!$reflection->hasMethod('__set')) {
-            $mock->__mocked = $reflection->getName();
-        }
         return $mock;
     }
 
@@ -169,11 +159,11 @@ class Stub
      */
     public static function makeEmptyExcept($class, string $method, array $params = [], $testCase = false)
     {
-        [$class, $reflectionClass, $methods] = self::createEmpty($class, $method);
+        [$class, $methods] = self::createEmpty($class, $method);
         $mock = self::generateMock($class, $methods, [], '', false, $testCase);
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflectionClass);
+        return $mock;
     }
 
     /**
@@ -223,17 +213,14 @@ class Stub
     public static function makeEmpty($class, array $params = [], $testCase = false)
     {
         $class = self::getClassname($class);
-        $reflection = new ReflectionClass($class);
-
-        $methods = get_class_methods($class);
         $methods = array_filter(
-            $methods,
+            get_class_methods($class),
             fn($i) => !in_array($i, Stub::$magicMethods)
         );
         $mock = self::generateMock($class, $methods, [], '', false, $testCase);
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflection);
+        return $mock;
     }
 
     /**
@@ -307,7 +294,7 @@ class Stub
         $mock = self::generateMock($class, $arguments, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflection);
+        return $mock;
     }
 
     /**
@@ -354,22 +341,18 @@ class Stub
      * @param bool|PHPUnitTestCase $testCase
      *
      * @return PHPUnitMockObject&RealInstanceType
-     * @throws ReflectionException
      */
     public static function constructEmpty($class, array $constructorParams = [], array $params = [], $testCase = false)
     {
         $class = self::getClassname($class);
-        $reflection = new ReflectionClass($class);
-
-        $methods = get_class_methods($class);
         $methods = array_filter(
-            $methods,
+            get_class_methods($class),
             fn($i) => !in_array($i, Stub::$magicMethods)
         );
         $mock = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflection);
+        return $mock;
     }
 
     /**
@@ -423,16 +406,21 @@ class Stub
         array $params = [],
         $testCase = false
     ) {
-        [$class, $reflectionClass, $methods] = self::createEmpty($class, $method);
+        [$class, $methods] = self::createEmpty($class, $method);
         $mock = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
 
-        return self::markAsMock($mock, $reflectionClass);
+        return $mock;
     }
 
     private static function generateMock()
     {
-        return self::doGenerateMock(func_get_args());
+        $args = func_get_args();
+        if (version_compare(PHPUnitVersion::series(), '10.4', '>=') && !is_bool($args[1])) {
+            array_splice($args, 1, 0, [true]);
+        }
+
+        return self::doGenerateMock($args);
     }
 
     /**
@@ -450,21 +438,28 @@ class Stub
     private static function doGenerateMock($args, $isAbstract = false)
     {
         $testCase = self::extractTestCaseFromArgs($args);
-        $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
-        $generatorClass = new Generator;
 
-        // using PHPUnit 5.4 mocks registration
-        if (version_compare(PHPUnitVersion::series(), '5.4', '>=')
-            && $testCase instanceof PHPUnitTestCase
-        ) {
-            $mock = call_user_func_array([$generatorClass, $methodName], $args);
-            $testCase->registerMockObject($mock);
-            return $mock;
+        // PHPUnit 10.4 changed method names
+        if (version_compare(PHPUnitVersion::series(), '10.4', '>=')) {
+            $methodName = $isAbstract ? 'mockObjectForAbstractClass' : 'testDouble';
+        } else {
+            $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
         }
+
+        // PHPUnit 10.3 changed the namespace
+        if (version_compare(PHPUnitVersion::series(), '10.3', '>=')) {
+            $generatorClass = new Generator();
+        } else {
+            $generatorClass = new LegacyGenerator();
+        }
+
+        $mock = call_user_func_array([$generatorClass, $methodName], $args);
+
         if ($testCase instanceof PHPUnitTestCase) {
-            $generatorClass = $testCase;
+            $testCase->registerMockObject($mock);
         }
-        return call_user_func_array([$generatorClass, $methodName], $args);
+
+        return $mock;
     }
 
     private static function extractTestCaseFromArgs(&$args)
@@ -633,6 +628,6 @@ class Stub
         );
 
         $methods = count($methods) ? $methods : null;
-        return [$class, $reflectionClass, $methods];
+        return [$class, $methods];
     }
 }

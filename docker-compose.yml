@@ -11,9 +11,8 @@ services:
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: db_yii2books
-      MYSQL_USER: root
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
