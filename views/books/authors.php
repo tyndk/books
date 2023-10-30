@@ -39,7 +39,7 @@ $authors = Authors::find()->all();
     <ul class="list-group">
     <?php foreach($authors as $el) { ?>
         <li class="list-group-item">
-            <a href="<?= Url::toRoute(['by_author', 'id'=>$el->id]) ?>"><?= $el->name ?></a>
+            <a href="<?= Url::toRoute(['by_author', 'id'=>$el->id]) ?>"><?= Html::encode($el->name) ?></a>
         </li>
     <?php } ?>
     </ul>

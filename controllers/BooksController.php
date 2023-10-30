@@ -11,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
+use yii\helpers\Html;
 
 /** @var \app\models\Books|null $model */
 
@@ -51,7 +52,7 @@ class BooksController extends \yii\web\Controller
     public function actionList()
     {
         $model = new Books();
-        $el = Books::find()->all();
+        //$el = Books::find()->all();
         $author = new Authors();
 
         $searchModel = new BooksSearch();
@@ -59,7 +60,7 @@ class BooksController extends \yii\web\Controller
 
         return $this->render('list', [
             'model' => $model,
-            'books' => $el,
+            //'books' => $el,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'author' => $author,
@@ -149,7 +150,7 @@ class BooksController extends \yii\web\Controller
         $model = Books::findOne($id);
         $author= Authors::findOne($model->author_id);
         $oldImage = 'uploads/' . $model->image;
-
+        
         if (!$model)
         {
             throw new NotFoundHttpException('Запись не найдена :(');
@@ -175,10 +176,15 @@ class BooksController extends \yii\web\Controller
             }
         }
 
-        return $this->render('update', [
-            'model' => $model, 
-            'author' => $author
-        ]);
+        if (!Yii::$app->user->isGuest) 
+        {
+            return $this->render('update', [
+                'model' => $model, 
+                'author' => $author
+            ]);
+        } else {
+            return $this->goHome();
+        }
     }
 
     public function actionBy_author($id)
@@ -206,9 +212,9 @@ class BooksController extends \yii\web\Controller
 
         if (Yii::$app->request->isPost) 
         {
-            if ($author->load(Yii::$app->request->post()))
+            if ($author->load(Yii::$app->request->post()) && $author->validate())
             {
-                $authorName = $author->name;
+                $authorName = strip_tags($author->name);
                 $author->save();
                 return $this->refresh();
             }

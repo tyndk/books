@@ -8,7 +8,7 @@ use yii\helpers\Html;
 ?>
 
 <div class="d-flex justify-content-start">
-        <h2>Все книги <b id="headingAuthor"><?= $author->name ?></b></h2>
+        <h2>Все книги <b id="headingAuthor"><?= Html::encode($author->name) ?></b></h2>
         <div class="form-group d-flex">
             <?php $form = ActiveForm::begin(['id' => 'formUpdate', 'action' => ['authors/update', 'id' => $author->id], 'options' => ['class' => 'd-none m-1']]); ?>
                 <?= $form->field($author, 'name')->textInput(['placeholder' => $author->getAttributeLabel('name')])->label(false) ?>

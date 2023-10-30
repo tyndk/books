@@ -5,6 +5,8 @@ use yii\data\ActiveDataProvider;
 
 class BooksSearch extends Books
 {
+    public $author;
+    
     public function rules()
     {
         return [
@@ -15,9 +17,16 @@ class BooksSearch extends Books
     public function search($params)
     {
         $query = Books::find();
+        $query->joinWith(['author']);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['author_id'] = [
+            'asc' => ['authors.name' => SORT_ASC],
+            'desc' => ['authors.name' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -25,7 +34,7 @@ class BooksSearch extends Books
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'author', $this->author])
+        $query->andFilterWhere(['like', 'authors.name', $this->author])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'year', $this->year])
             ->andFilterWhere(['like', 'genre', $this->genre])

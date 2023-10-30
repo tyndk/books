@@ -77,7 +77,7 @@ foreach ($authors as $el) {
                 'value' => function ($model) {
                     return $model->author->name;
                 },
-                'filter' => Html::activeTextInput($searchModel, 'author_id', ['class' => 'form-control']),
+                'filter' => Html::activeTextInput($searchModel, 'author', ['class' => 'form-control']),
             ],
             [
                 'attribute' => 'title',

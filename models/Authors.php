@@ -31,6 +31,9 @@ class Authors extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name'], 'string', 'max' => 255],
+            ['name', 'filter', 'filter' => function($value){
+                return strip_tags($value);
+            }],
         ];
     }
 
