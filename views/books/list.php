@@ -33,14 +33,19 @@ foreach ($authors as $el) {
         <h3 class="px-3">Введите запись</h3><hr>
     </div>
     <div class="container px-3 mt-3 col-md-4">
-    <?php $form = ActiveForm::begin(['id' => 'book-form', 'action' => ['books/add'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'book-form', 
+        'action' => ['books/add'], 
+        'options' => ['enctype' => 'multipart/form-data'],
+        'enableClientValidation' => true
+        ]); ?>
     <?= $form->field($model, 'author_id')->dropDownList($authors_el) ?>
     <datalist id='authors'>
         <?php foreach ($authors as $item) : ?>
             <option value="<?= $item->name ?>"></option>
         <?php endforeach; ?>
     </datalist>
-    <?= $form->field($model, 'title')->textInput(['class' => 'form-control']) ?>
+    <?= $form->field($model, 'title')->textInput(['class' => 'form-control required-label']) ?>
     <?= $form->field($model, 'year')->input('number', ['class' => 'form-control']) ?>
     <?= $form->field($model, 'genre')->dropDownList(Yii::$app->GenresArray->genres, ['class' => 'form-control']) ?>
     <?= $form->field($model, 'image')->fileInput(['class' => 'form-control']) ?>

@@ -16,10 +16,10 @@ class m231017_185946_create_table_books2 extends Migration
             'id' => $this->primaryKey(),
             'author_id' => $this->integer(4)->notNull(),
             'title' => $this->string(255)->notNull(),
-            'year' => $this->integer(4)->notNull(),
+            'year' => $this->integer(4)->null(),
             'genre' => $this->string(255)->notNull(),
-            'image' => $this->string(255)->notNull(),
-            'pages' => $this->integer(3)->notNull()
+            'image' => $this->string(255)->null(),
+            'pages' => $this->integer(3)->null()
         ]);
 
         $this->addForeignKey(

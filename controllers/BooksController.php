@@ -43,8 +43,13 @@ class BooksController extends \yii\web\Controller
                 Yii::$app->session->setFlash('error', 'Ошибка при загрузке картинки: '. implode(', ', array_values($model->getFirstErrors())));
             }
         }
+        else
+        {
+            $model->save();
+            return null;
+        }
 
-        return null;
+        //return null;
     }
 
 
@@ -86,16 +91,15 @@ class BooksController extends \yii\web\Controller
 
                     $imagePath = $this->uploadImage($model);
 
-                    if ($imagePath !== null)
-                    {
+                    //if ($imagePath !== null)
+                    
                         Yii::$app->session->setFlash('success', 'Книга добавлена');
                         return $this->redirect(['/books']);
-                    }
-                    else
-                    {
-                        Yii::$app->session->setFlash('error', 'Ошибка при сохранении книги: '. implode(', ', array_values($model->getFirstErrors())));
-                        return $this->redirect(['/books']);
-                    }
+                    
+                    
+                        //Yii::$app->session->setFlash('error', 'Ошибка при сохранении книги: '. implode(', ', array_values($model->getFirstErrors())));
+                        //return $this->redirect(['/books']);
+                    
                 } else {
                     Yii::$app->session->setFlash('error', 'Выбранный автор не найден.');
                     return $this->redirect(['/books']);
