@@ -153,7 +153,7 @@ class BooksController extends \yii\web\Controller
     {
         $model = Books::findOne($id);
         $author= Authors::findOne($model->author_id);
-        $oldImage = 'uploads/' . $model->image;
+        if ($model->image !== null) {$oldImage = 'uploads/' . $model->image;} else {$oldImage=null;}
         
         if (!$model)
         {
@@ -169,14 +169,15 @@ class BooksController extends \yii\web\Controller
             
             if ($imagePath !== null)
             {
-                unlink($oldImage);
+                if ($oldImage !== null) {unlink($oldImage);}
                 Yii::$app->session->setFlash('success', 'Книга изменена');
                 return $this->redirect('books');
             }
             else
             {
-                Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirstErrors())));
-                return $this->refresh();
+                //Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirstErrors())));
+                //return $this->refresh();
+                return $this->redirect('books');
             }
         }
 

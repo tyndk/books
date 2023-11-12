@@ -18,6 +18,9 @@ class RegistrationForm extends Model
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => 'app\models\User', 'targetAttribute' => 'email', 'message' => 'Этот email занят.'],
             ['password', 'string', 'min' => 6],
+            ['username', 'filter', 'filter' => function($value){
+                return strip_tags($value);
+            }],
         ];
     }
 

@@ -37,6 +37,9 @@ class Books extends \yii\db\ActiveRecord
             [['author_id', 'year', 'pages'], 'integer'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Authors::class, 'targetAttribute' => ['author_id' => 'id']],
             [['title', 'genre'], 'string', 'max' => 255],
+            ['title', 'filter', 'filter' => function($value){
+                return strip_tags($value);
+            }],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, ico', 'maxSize' => 2056*2056*15]
         ];
     }
