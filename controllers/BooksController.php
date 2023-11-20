@@ -11,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
+use yii\imagine\Image;
 use yii\helpers\Html;
 
 /** @var \app\models\Books|null $model */
@@ -18,22 +19,28 @@ use yii\helpers\Html;
 class BooksController extends \yii\web\Controller
 {
 
-
     private function uploadImage($model) 
     {
         $model->image = UploadedFile::getInstance($model, 'image');
 
         if ($model->image)
         {
-            $randomFileName = Yii::$app->security->generateRandomString(10);
-            $imagePath = 'uploads/' . $randomFileName . '.' . $model->image->extension;
+            $imgPath = 'uploads/';
+            $imgName = Yii::$app->security->generateRandomString(10);
+            $fileExt = '.' . $model->image->extension;
+
+            $originFile = $imgPath . $imgName . $fileExt;
+            $thumbnFile = $imgPath . $imgName . '-thumb' . $fileExt;
             
-            if ($model->image->saveAs($imagePath))
+            if ($model->image->saveAs($originFile))
             {
-                $model->image = $randomFileName . '.' . $model->image->extension;
+                Image::thumbnail($originFile, 200, 200)->save($thumbnFile, ['quality' => 80]);
+
+                $model->image = $originFile;
+                $model->thumbnail = $thumbnFile;
 
                 if ($model->save()){
-                    return $imagePath;
+                    return $originFile;
                 } else {
                     Yii::$app->session->setFlash('error', 'Ошибка при загрузке картинки: '. implode(', ', array_values($model->getFirstErrors())));
                 }
@@ -49,7 +56,7 @@ class BooksController extends \yii\web\Controller
             return null;
         }
 
-        //return null;
+        return null;
     }
 
 
@@ -57,7 +64,6 @@ class BooksController extends \yii\web\Controller
     public function actionList()
     {
         $model = new Books();
-        //$el = Books::find()->all();
         $author = new Authors();
 
         $searchModel = new BooksSearch();
@@ -65,7 +71,6 @@ class BooksController extends \yii\web\Controller
 
         return $this->render('list', [
             'model' => $model,
-            //'books' => $el,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'author' => $author,
@@ -90,16 +95,9 @@ class BooksController extends \yii\web\Controller
                     $model->author_id = $author->id;
 
                     $imagePath = $this->uploadImage($model);
-
-                    //if ($imagePath !== null)
                     
-                        Yii::$app->session->setFlash('success', 'Книга добавлена');
-                        return $this->redirect(['/books']);
-                    
-                    
-                        //Yii::$app->session->setFlash('error', 'Ошибка при сохранении книги: '. implode(', ', array_values($model->getFirstErrors())));
-                        //return $this->redirect(['/books']);
-                    
+                    Yii::$app->session->setFlash('success', 'Книга добавлена');
+                    return $this->redirect(['/books']);
                 } else {
                     Yii::$app->session->setFlash('error', 'Выбранный автор не найден.');
                     return $this->redirect(['/books']);
@@ -153,7 +151,12 @@ class BooksController extends \yii\web\Controller
     {
         $model = Books::findOne($id);
         $author= Authors::findOne($model->author_id);
-        if ($model->image !== null) {$oldImage = 'uploads/' . $model->image;} else {$oldImage=null;}
+        if ($model->image !== null) {
+            $oldImage = $model->image;
+            $oldImageThumb = $model->thumbnail;
+        } else {
+            $oldImage=null;
+        }
         
         if (!$model)
         {
@@ -169,14 +172,15 @@ class BooksController extends \yii\web\Controller
             
             if ($imagePath !== null)
             {
-                if ($oldImage !== null) {unlink($oldImage);}
+                if ($oldImage !== null) {
+                    unlink($oldImage);
+                    unlink($oldImageThumb);
+                }
                 Yii::$app->session->setFlash('success', 'Книга изменена');
                 return $this->redirect('books');
             }
             else
             {
-                //Yii::$app->session->setFlash('error', 'Ошибка при обновлении книги: '. implode(', ', array_values($model->getFirstErrors())));
-                //return $this->refresh();
                 return $this->redirect('books');
             }
         }

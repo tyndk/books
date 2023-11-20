@@ -5,6 +5,8 @@ use yii\data\ActiveDataProvider;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
+
+$default_img = 'default.png';
 ?>
 
 <div class="d-flex justify-content-start">
@@ -28,10 +30,17 @@ use yii\helpers\Html;
 
 <div class="row row-cols-1 row-cols-md-5 g-4">
 <?php
-foreach ($dataProvider->models as $book) { ?>
+foreach ($dataProvider->models as $book) { 
+  if ($book->thumbnail) {
+    $image = $book->thumbnail; 
+    $image_link = $image;
+  } else {
+    $image_link = $default_img;
+  };
+  ?>
  <div class="col">
     <div class="card h-100">
-        <img src="../uploads/<?= $book->image ?>" class="img-fluid rounded-start" alt="<?= $book->title ?>">
+        <img src="../<?= $image_link ?>" class="img-fluid rounded" alt="<?= $book->title ?>">
         <div class="card-body">
             <h5 class="card-title">
                 <a href="<?= Url::toRoute(['view', 'id'=>$book->id]) ?>"><?= $book->title ?></a>

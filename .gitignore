@@ -36,6 +36,7 @@ tests/_support/_generated
 /.vagrant
 
 /.uploads
+/imgs
 
 notes.txt
 /models/AccessRule.php

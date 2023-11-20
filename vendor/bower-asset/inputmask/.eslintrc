@@ -1,49 +1,73 @@
 {
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "node": true
-  },
-  "extends": "eslint:recommended",
-  "parserOptions": {
-    "ecmaVersion": 2015,
-    "sourceType": "module"
-  },
   "rules": {
-    "indent": [
-      "off",
-      "tab",
-      {
-        "SwitchCase": 1
-      }
+    "consistent-return": [
+      1
     ],
-    "linebreak-style": [
-      "off"
+    "curly": [
+      2,
+      "multi-line"
+    ],
+    "eol-last": [
+      0
+    ],
+    "eqeqeq": [
+      2,
+      "smart"
+    ],
+    "indent": [
+     0
     ],
     "quotes": [
-      "error",
-      "double"
+      1,
+      "double",
+      "avoid-escape"
     ],
-    "semi": [
-      "error",
-      "always"
+    "no-cond-assign": [
+      1,
+      "except-parens"
+    ],
+    "new-cap": [
+      0
+    ],
+    "no-empty": [
+      0
+    ],
+    "no-loop-func": [
+      0
+    ],
+    "no-underscore-dangle": [
+      0
     ],
     "no-unused-vars": [
-      "error",
+      2,
       {
         "vars": "all",
         "args": "none"
       }
     ],
-    "no-cond-assign": [
-      "error",
-      "except-parens"
+    "no-use-before-define": [
+      2,
+      "nofunc"
+    ],
+    "no-shadow": [
+      0
+    ],
+    "semi-spacing": [
+      1
+    ],
+    "strict": [
+      0
     ]
+  },
+  "env": {
+    "browser": true
   },
   "globals": {
     "Inputmask": true,
     "jQuery": false,
-    "define": false,
-    "require": false
+    "module": false,
+    "require": false,
+    "requirejs": false,
+    "define": false
   }
 }

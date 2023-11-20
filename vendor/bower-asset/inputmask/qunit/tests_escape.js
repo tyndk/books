@@ -1,5 +1,4 @@
-export default function (qunit, Inputmask) {
-    var $ = Inputmask.dependencyLib;
+export default function(qunit, $, Inputmask) {
 	qunit.module("Escape character");
 
 	qunit.test("inputmask(\"9\\|9\")", function(assert) {

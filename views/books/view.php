@@ -7,20 +7,24 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $default_img = 'default.png';
-if ($model->image) {$image = $model->image;} else {$image = $default_img;};
-$image_link = 'uploads/' . $image;
+if ($model->thumbnail) {
+  $image = $model->thumbnail; 
+  $image_link = $image;
+} else {
+  $image_link = $default_img;
+};
 ?>
 
 <div class="card mb-3" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4 p-3 bg-secondary">
-      <img src="<?= $image_link; ?>" class="img-fluid rounded-start" alt="<?= $model->title ?>">
-      <p class="card-text text-center"><small class="text-white">Страниц: <?php if ($model->pages) {$model->pages;} else {echo '(не задано)';} ?></small></p> 
+      <img src="<?= $image_link; ?>" class="img-fluid rounded" alt="<?= $model->title ?>">
+      <p class="card-text text-center"><small class="text-white">Страниц: <?php if ($model->pages) {echo $model->pages;} else {echo '(не задано)';} ?></small></p> 
     </div>
     <div class="col-md-8 pb-3">
       <div class="card-body">
         <h5 class="card-title">"<?= Html::encode($model->title) ?>"</h5>
-        <p class="card-text">Эту книгу написал <b><a href="<?= Url::toRoute(['by_author', 'id'=>$model->author_id]) ?>"><?= $model->author->name ?></a></b> в <b><?php if ($model->year) {$model->year;} else {echo 'каком-то';} ?></b> году.</p>
+        <p class="card-text">Эту книгу написал <b><a href="<?= Url::toRoute(['by_author', 'id'=>$model->author_id]) ?>"><?= $model->author->name ?></a></b> в <b><?php if ($model->year) {echo $model->year;} else {echo 'каком-то';} ?></b> году.</p>
         <p class="card-text">Жанр: <b><?= $model->genre ?></b></p>
 
         <?php if (!Yii::$app->user->isGuest) 
