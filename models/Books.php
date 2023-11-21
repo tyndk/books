@@ -40,7 +40,8 @@ class Books extends \yii\db\ActiveRecord
             ['title', 'filter', 'filter' => function($value){
                 return strip_tags($value);
             }],
-            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, ico', 'maxSize' => 1024*1280*15]
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, ico', 'maxSize' => 1024*1280*15],
+            ['title', 'unique']
         ];
     }
 

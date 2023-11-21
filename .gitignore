@@ -35,8 +35,8 @@ tests/_support/_generated
 #vagrant folder
 /.vagrant
 
-/.uploads
-/imgs
+web/uploads/*
+web/imgs
 
 notes.txt
 /models/AccessRule.php

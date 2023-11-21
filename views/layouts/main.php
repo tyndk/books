@@ -25,6 +25,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <head>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+
+    <link rel="stylesheet" type="text/css" href="/css/site.css">
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>

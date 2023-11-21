@@ -87,7 +87,7 @@ a.desc:after {
     margin-bottom: 1rem;
 }
 
-.required-label::before {
+form div.required label.form-label::after {
     content: " *";
     color: red;
 }

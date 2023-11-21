@@ -52,8 +52,12 @@ class BooksController extends \yii\web\Controller
         }
         else
         {
-            $model->save();
-            return null;
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Книга добавлена');
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка при добавлении: '. implode(', ', array_values($model->getFirstErrors())));
+                return null;
+            }
         }
 
         return null;
@@ -96,7 +100,6 @@ class BooksController extends \yii\web\Controller
 
                     $imagePath = $this->uploadImage($model);
                     
-                    Yii::$app->session->setFlash('success', 'Книга добавлена');
                     return $this->redirect(['/books']);
                 } else {
                     Yii::$app->session->setFlash('error', 'Выбранный автор не найден.');
