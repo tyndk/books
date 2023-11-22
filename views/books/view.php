@@ -5,6 +5,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\bootstrap5\ActiveForm;
 
 $default_img = 'default.png';
 if ($model->thumbnail) {
@@ -17,8 +18,10 @@ if ($model->thumbnail) {
 
 <div class="card mb-3" style="max-width: 540px;">
   <div class="row g-0">
-    <div class="col-md-4 p-3 bg-secondary">
-      <img src="<?= $image_link; ?>" class="img-fluid rounded" alt="<?= $model->title ?>">
+    <div class="col-md-4 p-3 bg-secondary text-center">
+        <img src="<?= $image_link; ?>" class="img-fluid rounded" alt="<?= $model->title ?>">
+        <a href="<?= Url::toRoute(['delete_img', 'id'=>$model->id]) ?>"><button class="btn btn-secondary btn-sm">Удалить картинку</button></a>
+        <hr>
       <p class="card-text text-center"><small class="text-white">Страниц: <?php if ($model->pages) {echo $model->pages;} else {echo '(не задано)';} ?></small></p> 
     </div>
     <div class="col-md-8 pb-3">

@@ -132,19 +132,22 @@ class BooksController extends \yii\web\Controller
     public function actionDelete($id)
     {
         $model = Books::findOne($id);
-        $file = 'uploads/' . $model->image;
+        $originFile = $model->image;
+        $thumbnFile = $model->thumbnail;
 
-        if (file_exists($file))
+        if ($originFile !== null && file_exists($originFile))
         {
-            if (unlink($file))
+            if ((unlink($originFile)) && (unlink($thumbnFile)))
             {
-                Yii::$app->session->setFlash('success', 'Картинка ' . $file . ' книги удалена');
+                Yii::$app->session->setFlash('success', 'Картинка книги удалена');
             }
         } else {
             Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
         }
 
-        $model->delete();
+        if ($model->delete()){
+            Yii::$app->session->setFlash('success', 'Книга удалена');
+        }
 
         return $this->redirect(['/books']);
     }
@@ -180,11 +183,11 @@ class BooksController extends \yii\web\Controller
                     unlink($oldImageThumb);
                 }
                 Yii::$app->session->setFlash('success', 'Книга изменена');
-                return $this->redirect('books');
+                return $this->redirect(['books/view', 'id' => $id]);
             }
             else
             {
-                return $this->redirect('books');
+                return $this->redirect(['books/view', 'id' => $id]);
             }
         }
 
@@ -236,5 +239,27 @@ class BooksController extends \yii\web\Controller
             'model' => $model,
             'author' => $author
             ]);
+    }
+
+    public function actionDelete_img($id)
+    {
+        $model = Books::findOne($id);
+        $originFile = $model->image;
+        $thumbnFile = $model->thumbnail;
+
+        if ($originFile !== null && file_exists($originFile))
+        {
+            if ((unlink($originFile)) && (unlink($thumbnFile)))
+            {
+                $model->image = NULL;
+                $model->thumbnail = NULL;
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Картинкf удалена');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
+        }
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 }
