@@ -20,7 +20,9 @@ if ($model->thumbnail) {
   <div class="row g-0">
     <div class="col-md-4 p-3 bg-secondary text-center">
         <img src="<?= $image_link; ?>" class="img-fluid rounded" alt="<?= $model->title ?>">
+        <?php if ($image_link != $default_img) { ?>
         <a href="<?= Url::toRoute(['delete_img', 'id'=>$model->id]) ?>"><button class="btn btn-secondary btn-sm">Удалить картинку</button></a>
+        <?php } ?>
         <hr>
       <p class="card-text text-center"><small class="text-white">Страниц: <?php if ($model->pages) {echo $model->pages;} else {echo '(не задано)';} ?></small></p> 
     </div>

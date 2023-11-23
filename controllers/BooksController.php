@@ -53,6 +53,7 @@ class BooksController extends \yii\web\Controller
         else
         {
             if ($model->save()) {
+                //return $oldImage2;
                 Yii::$app->session->setFlash('success', 'Книга добавлена');
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка при добавлении: '. implode(', ', array_values($model->getFirstErrors())));
@@ -157,6 +158,7 @@ class BooksController extends \yii\web\Controller
     {
         $model = Books::findOne($id);
         $author= Authors::findOne($model->author_id);
+        
         if ($model->image !== null) {
             $oldImage = $model->image;
             $oldImageThumb = $model->thumbnail;
@@ -182,13 +184,14 @@ class BooksController extends \yii\web\Controller
                     unlink($oldImage);
                     unlink($oldImageThumb);
                 }
-                Yii::$app->session->setFlash('success', 'Книга изменена');
-                return $this->redirect(['books/view', 'id' => $id]);
             }
             else
             {
-                return $this->redirect(['books/view', 'id' => $id]);
+                $model->image = $oldImage;
+                $model->save();
             }
+            Yii::$app->session->setFlash('success', 'Книга изменена');
+            return $this->redirect(['books/view', 'id' => $id]);
         }
 
         if (!Yii::$app->user->isGuest) 
@@ -254,7 +257,7 @@ class BooksController extends \yii\web\Controller
                 $model->image = NULL;
                 $model->thumbnail = NULL;
                 $model->save();
-                Yii::$app->session->setFlash('success', 'Картинкf удалена');
+                Yii::$app->session->setFlash('success', 'Картинка удалена');
             }
         } else {
             Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
