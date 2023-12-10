@@ -13,6 +13,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: books
       MYSQL_DATABASE: db_yii2books
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -26,3 +28,6 @@ services:
     restart: always
     ports:
       - 8081:80
+
+volumes:
+  mysql_data:
