@@ -275,7 +275,7 @@ class BooksController extends \yii\web\Controller
                     $model->image = NULL;
                     $model->thumbnail = NULL;
                     $model->save();
-                    Yii::$app->session->setFlash('success', 'Картинкf удалена');
+                    Yii::$app->session->setFlash('success', 'Картинка удалена');
                 }
             } else {
                 Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');

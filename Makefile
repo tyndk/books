@@ -5,10 +5,10 @@ init:
 	$(DOCKER_COMPOSE) up -d --build
 	$(DOCKER_EXEC) php composer install
 	$(DOCKER_EXEC) php init
-	$(DOCKER_EXEC) php yii migrate --interactive=0
 
 up:
 	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_EXEC) php yii migrate --interactive=0
 
 down:
 	$(DOCKER_COMPOSE) down
