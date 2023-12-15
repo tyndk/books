@@ -24,6 +24,7 @@ class BooksController extends \yii\web\Controller
         if (!Yii::$app->user->isGuest) 
         {
             $model->image = UploadedFile::getInstance($model, 'image');
+
             if ($model->image)
             {
                 $imgPath = 'uploads/';
@@ -54,7 +55,7 @@ class BooksController extends \yii\web\Controller
             else
             {
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Книга добавлена');
+                    //Yii::$app->session->setFlash('success', 'Книга обновлена');
                 } else {
                     Yii::$app->session->setFlash('error', 'Ошибка при добавлении: '. implode(', ', array_values($model->getFirstErrors())));
                     return null;
@@ -178,6 +179,7 @@ class BooksController extends \yii\web\Controller
                 $oldImageThumb = $model->thumbnail;
             } else {
                 $oldImage=null;
+                $oldImageThumb=null;
             }
             
             if (!$model)
@@ -190,19 +192,30 @@ class BooksController extends \yii\web\Controller
                 $author = Authors::findOne($selectedAuthorId);
 
                 $model->author_id = $author->id;
-                $imagePath = $this->uploadImage($model);
-                
-                if ($imagePath !== null)
+
+                $newImage = UploadedFile::getInstance($model, 'image');
+                if ($newImage == null)
                 {
-                    if ($oldImage !== null) {
+                    $model->image=null;
+                    $model->thumbnail=null;
+                } 
+                else
+                {
+                    $imagePath = $this->uploadImage($model);
+                    if ($oldImage !== null && $oldImage !== null) {
                         unlink($oldImage);
                         unlink($oldImageThumb);
                     }
+                }
+                
+                if ($model->save())
+                {
                     Yii::$app->session->setFlash('success', 'Книга изменена');
                     return $this->redirect(['books/view', 'id' => $id]);
                 }
                 else
                 {
+                    Yii::$app->session->setFlash('error', 'Ошибка: '. implode(', ', array_values($model->getFirstErrors())));
                     return $this->redirect(['books/view', 'id' => $id]);
                 }
             }
@@ -238,11 +251,11 @@ class BooksController extends \yii\web\Controller
 
     public function actionAuthors()
     {  
+        $model = Books::find()->all();
+        $author = new Authors();
+
         if (!Yii::$app->user->isGuest) 
         {
-            $model = Books::find()->all();
-            $author = new Authors();
-
             if (Yii::$app->request->isPost) 
             {
                 if ($author->load(Yii::$app->request->post()) && $author->validate())
@@ -252,12 +265,12 @@ class BooksController extends \yii\web\Controller
                     return $this->refresh();
                 }
             }
-
+        }
             return $this->render('authors', [
                 'model' => $model,
                 'author' => $author
                 ]);
-        }
+        
     }
 
     public function actionDelete_img($id)

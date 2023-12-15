@@ -9,6 +9,5 @@ init:
 up:
 	$(DOCKER_COMPOSE) up -d
 	$(DOCKER_EXEC) php yii migrate --interactive=0
-
 down:
 	$(DOCKER_COMPOSE) down
