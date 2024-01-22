@@ -3,16 +3,6 @@
 $vendorDir = dirname(__DIR__);
 
 return array (
-  'yiisoft/yii2-bootstrap5' => 
-  array (
-    'name' => 'yiisoft/yii2-bootstrap5',
-    'version' => '2.0.4.0',
-    'alias' => 
-    array (
-      '@yii/bootstrap5' => $vendorDir . '/yiisoft/yii2-bootstrap5/src',
-    ),
-    'bootstrap' => 'yii\\bootstrap5\\i18n\\TranslationBootstrap',
-  ),
   'yiisoft/yii2-faker' => 
   array (
     'name' => 'yiisoft/yii2-faker',
@@ -22,13 +12,13 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker/src',
     ),
   ),
-  'yiisoft/yii2-gii' => 
+  'yiisoft/yii2-imagine' => 
   array (
-    'name' => 'yiisoft/yii2-gii',
-    'version' => '2.2.6.0',
+    'name' => 'yiisoft/yii2-imagine',
+    'version' => '2.0.4.0',
     'alias' => 
     array (
-      '@yii/gii' => $vendorDir . '/yiisoft/yii2-gii/src',
+      '@yii/imagine' => $vendorDir . '/yiisoft/yii2-imagine',
     ),
   ),
   'yiisoft/yii2-symfonymailer' => 
@@ -49,13 +39,23 @@ return array (
       '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug/src',
     ),
   ),
-  'yiisoft/yii2-imagine' => 
+  'yiisoft/yii2-gii' => 
   array (
-    'name' => 'yiisoft/yii2-imagine',
+    'name' => 'yiisoft/yii2-gii',
+    'version' => '2.2.6.0',
+    'alias' => 
+    array (
+      '@yii/gii' => $vendorDir . '/yiisoft/yii2-gii/src',
+    ),
+  ),
+  'yiisoft/yii2-bootstrap5' => 
+  array (
+    'name' => 'yiisoft/yii2-bootstrap5',
     'version' => '2.0.4.0',
     'alias' => 
     array (
-      '@yii/imagine' => $vendorDir . '/yiisoft/yii2-imagine',
+      '@yii/bootstrap5' => $vendorDir . '/yiisoft/yii2-bootstrap5/src',
     ),
+    'bootstrap' => 'yii\\bootstrap5\\i18n\\TranslationBootstrap',
   ),
 );
