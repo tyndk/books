@@ -38,11 +38,17 @@ class AuthorsController extends \yii\web\Controller
             ]);
 
             foreach ($dataProvider->models as $book) {
-                $file = 'uploads/' . $book->image;
-                if (file_exists($file))
+                if ($book->image)
                 {
-                    unlink($file);
+                    $img = $book->image;
+                    $imgThumb = $book->thumbnail;
+                    if (file_exists($img) && file_exists($imgThumb))
+                    {
+                        unlink($img);
+                        unlink($imgThumb);
+                    }
                 }
+                
                 $book->delete();
             }
             $author->delete();

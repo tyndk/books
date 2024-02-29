@@ -34,7 +34,7 @@ class Books extends \yii\db\ActiveRecord
     {
         return [
             [['author_id', 'title', 'genre'], 'required'],
-            [['author_id', 'year', 'pages'], 'integer'],
+            [['author_id', 'year', 'pages'], 'integer', 'min' => 1],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Authors::class, 'targetAttribute' => ['author_id' => 'id']],
             [['title', 'genre'], 'string', 'max' => 255],
             ['title', 'filter', 'filter' => function($value){

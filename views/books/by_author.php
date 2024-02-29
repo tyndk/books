@@ -35,7 +35,7 @@ foreach ($dataProvider->models as $book) {
     $image = $book->thumbnail; 
     $image_link = $image;
   } else {
-    $image_link = $default_img;
+    $image_link = 'uploads/' . $default_img;
   };
   ?>
  <div class="col">

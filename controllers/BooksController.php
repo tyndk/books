@@ -174,13 +174,13 @@ class BooksController extends \yii\web\Controller
             $model = Books::findOne($id);
             $author= Authors::findOne($model->author_id);
 
-            if ($model->image !== null) {
+            //if ($model->image !== null) {
                 $oldImage = $model->image;
                 $oldImageThumb = $model->thumbnail;
-            } else {
-                $oldImage=null;
-                $oldImageThumb=null;
-            }
+//            } else {
+//                $oldImage=null;
+//                $oldImageThumb=null;
+//            }
             
             if (!$model)
             {
@@ -196,8 +196,8 @@ class BooksController extends \yii\web\Controller
                 $newImage = UploadedFile::getInstance($model, 'image');
                 if ($newImage == null)
                 {
-                    $model->image=null;
-                    $model->thumbnail=null;
+                    $model->image=$oldImage; //null;
+                    $model->thumbnail=$oldImageThumb; //null;
                 } 
                 else
                 {
