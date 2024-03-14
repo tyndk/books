@@ -91,6 +91,10 @@ class BooksController extends \yii\web\Controller
         {
             $model = new Books();
             $authors = Authors::find()->all();
+
+            if (!$authors) {
+                throw new NotFoundHttpException('Авторы не найдены');
+            }
     
             if (Yii::$app->request->isPost) 
             {
@@ -103,7 +107,7 @@ class BooksController extends \yii\web\Controller
                     {
                         $model->author_id = $author->id;
 
-                        $imagePath = $this->uploadImage($model);
+                        //$imagePath = $this->uploadImage($model);
                         
                         return $this->redirect(['/books']);
                     } else {
@@ -114,11 +118,11 @@ class BooksController extends \yii\web\Controller
             } 
             else
             {
-            $el = Books::find()->all();
+            //$el = Books::find()->all();
 
             return $this->render('list', [
                 'model' => $model,
-                'books' => $el,
+                //'books' => $el,
                 'authors' => $authors
             ]);
             }
@@ -145,21 +149,26 @@ class BooksController extends \yii\web\Controller
         if (!Yii::$app->user->isGuest) 
         {
             $model = Books::findOne($id);
-            $originFile = $model->image;
-            $thumbnFile = $model->thumbnail;
-            
-            if ($originFile !== null && file_exists($originFile))
-            {
-                if ((unlink($originFile)) && (unlink($thumbnFile)))
-                {
-                    Yii::$app->session->setFlash('success', 'Картинка книги удалена');
-                }
-            } else {
-                Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
-            }
+            if ($model) {
+                $originFile = $model->image;
+                $thumbnFile = $model->thumbnail;
 
-            if ($model->delete()){
-                Yii::$app->session->setFlash('success', 'Книга удалена');
+                if ($originFile !== null && file_exists($originFile))
+                {
+                    if ((unlink($originFile)) && (unlink($thumbnFile)))
+                    {
+                        Yii::$app->session->setFlash('success', 'Картинка книги удалена');
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Картинки не нашлось для удаления');
+                }
+
+                if ($model->delete()){
+                    Yii::$app->session->setFlash('success', 'Книга удалена');
+                }
+            }
+            else {
+                throw new \yii\web\NotFoundHttpException('Запись не найдена');
             }
 
             return $this->redirect(['/books']);
@@ -172,55 +181,46 @@ class BooksController extends \yii\web\Controller
         if (!Yii::$app->user->isGuest) 
         {
             $model = Books::findOne($id);
-            $author= Authors::findOne($model->author_id);
 
-            //if ($model->image !== null) {
+            if ($model) {
+
+                $author = Authors::findOne($model->author_id);
                 $oldImage = $model->image;
                 $oldImageThumb = $model->thumbnail;
-//            } else {
-//                $oldImage=null;
-//                $oldImageThumb=null;
-//            }
-            
-            if (!$model)
+
+                if ($model->load(Yii::$app->request->post())) {
+                    $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
+                    $author = Authors::findOne($selectedAuthorId);
+
+                    $model->author_id = $author->id;
+
+                    $newImage = UploadedFile::getInstance($model, 'image');
+                    if ($newImage == null) {
+                        $model->image = $oldImage; //null;
+                        $model->thumbnail = $oldImageThumb; //null;
+                    } else {
+                        $imagePath = $this->uploadImage($model);
+                        if ($oldImage !== null && $oldImage !== null) {
+                            unlink($oldImage);
+                            unlink($oldImageThumb);
+                        }
+                    }
+
+                    if ($model->save()) {
+                        Yii::$app->session->setFlash('success', 'Книга изменена');
+                        return $this->redirect(['books/view', 'id' => $id]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Ошибка: ' . implode(', ', array_values($model->getFirstErrors())));
+                        return $this->redirect(['books/view', 'id' => $id]);
+                    }
+                }
+            }
+            else
             {
                 throw new NotFoundHttpException('Запись не найдена :(');
             }
-            else if ($model->load(Yii::$app->request->post()))
-            {
-                $selectedAuthorId = Yii::$app->request->post('Books')['author_id'];
-                $author = Authors::findOne($selectedAuthorId);
 
-                $model->author_id = $author->id;
-
-                $newImage = UploadedFile::getInstance($model, 'image');
-                if ($newImage == null)
-                {
-                    $model->image=$oldImage; //null;
-                    $model->thumbnail=$oldImageThumb; //null;
-                } 
-                else
-                {
-                    $imagePath = $this->uploadImage($model);
-                    if ($oldImage !== null && $oldImage !== null) {
-                        unlink($oldImage);
-                        unlink($oldImageThumb);
-                    }
-                }
-                
-                if ($model->save())
-                {
-                    Yii::$app->session->setFlash('success', 'Книга изменена');
-                    return $this->redirect(['books/view', 'id' => $id]);
-                }
-                else
-                {
-                    Yii::$app->session->setFlash('error', 'Ошибка: '. implode(', ', array_values($model->getFirstErrors())));
-                    return $this->redirect(['books/view', 'id' => $id]);
-                }
-            }
-
-            return $this->render('update', [
+                return $this->render('update', [
                 'model' => $model, 
                 'author' => $author
             ]);
@@ -235,7 +235,7 @@ class BooksController extends \yii\web\Controller
     {
         $author = Authors::findOne($id);
 
-        if ($author !== null) {
+        if ($author) {
             $dataProvider = new ActiveDataProvider([
                 'query' => $author->getBooks(),
             ]);
@@ -251,7 +251,7 @@ class BooksController extends \yii\web\Controller
 
     public function actionAuthors()
     {  
-        $model = Books::find()->all();
+        //$model = Books::find()->all();
         $author = new Authors();
 
         if (!Yii::$app->user->isGuest) 
@@ -260,14 +260,14 @@ class BooksController extends \yii\web\Controller
             {
                 if ($author->load(Yii::$app->request->post()) && $author->validate())
                 {
-                    $authorName = strip_tags($author->name);
+                    //$authorName = strip_tags($author->name);
                     $author->save();
                     return $this->refresh();
                 }
             }
         }
             return $this->render('authors', [
-                'model' => $model,
+                //'model' => $model,
                 'author' => $author
                 ]);
         
@@ -278,9 +278,14 @@ class BooksController extends \yii\web\Controller
         if (!Yii::$app->user->isGuest) 
         {
             $model = Books::findOne($id);
-            $originFile = $model->image;
-            $thumbnFile = $model->thumbnail;
-    
+            if ($model) {
+                $originFile = $model->image;
+                $thumbnFile = $model->thumbnail;
+            }
+            else {
+                throw new \yii\web\NotFoundHttpException('Картинка не найдена');
+            }
+
             if ($originFile !== null && file_exists($originFile))
             {
                 if ((unlink($originFile)) && (unlink($thumbnFile)))

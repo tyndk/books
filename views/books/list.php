@@ -1,11 +1,18 @@
 <?php
+//namespace app\components;
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var app\models\Books $model */
-/** @var app\models\Books[] $books */
-/** @var app\models\Authors $author */
+/**
+ * @var yii\web\View $this
+ * @var yii\bootstrap5\ActiveForm $form
+ * @var app\models\Books $model
+ * @var app\models\Books[] $books
+ * @var app\models\Authors $author
+ * @var yii\data\ActiveDataProvider $dataProvider
+ * @var yii\grid\GridView $searchModel
 
+ */
+// * @property app\components\GenresArray GenresArray
+// * @property array $genres
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\data\ActiveDataProvider;
@@ -13,6 +20,7 @@ use app\models\Books;
 use app\models\BooksSearch;
 use app\models\Authors;
 use yii\grid\GridView;
+
 
 $this->title = 'Список книг';
 

@@ -13,14 +13,13 @@ class AuthorsController extends \yii\web\Controller
         {
             $author = Authors::findOne($id);
 
-            if ($author->load(Yii::$app->request->post()))
-            {
-                if ($author->save())
-                {
-                    Yii::$app->session->setFlash('success', 'Изменено');
-                }
-                else {
-                    Yii::$app->session->setFlash('error', 'Ошибка');
+            if ($author) {
+                if ($author->load(Yii::$app->request->post())) {
+                    if ($author->save()) {
+                        Yii::$app->session->setFlash('success', 'Изменено');
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Ошибка');
+                    }
                 }
             }
 
@@ -33,28 +32,28 @@ class AuthorsController extends \yii\web\Controller
         if (!Yii::$app->user->isGuest) 
         {
             $author = Authors::findOne($id);
-            $dataProvider = new ActiveDataProvider([
-                'query' => $author->getBooks(),
-            ]);
 
-            foreach ($dataProvider->models as $book) {
-                if ($book->image)
-                {
-                    $img = $book->image;
-                    $imgThumb = $book->thumbnail;
-                    if (file_exists($img) && file_exists($imgThumb))
-                    {
-                        unlink($img);
-                        unlink($imgThumb);
+            if ($author) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => $author->getBooks(),
+                ]);
+
+                foreach ($dataProvider->models as $book) {
+                    if ($book->image) {
+                        $img = $book->image;
+                        $imgThumb = $book->thumbnail;
+                        if (file_exists($img) && file_exists($imgThumb)) {
+                            unlink($img);
+                            unlink($imgThumb);
+                        }
                     }
-                }
-                
-                $book->delete();
-            }
-            $author->delete();
-            
-            Yii::$app->session->setFlash('error', 'Автор ' . $author->name . ' с его книгами удален.');
 
+                    $book->delete();
+                }
+                $author->delete();
+
+                Yii::$app->session->setFlash('error', 'Автор ' . $author->name . ' с его книгами удален.');
+            }
             return $this->redirect(['/authors']);
         }
     }

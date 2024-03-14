@@ -11,6 +11,11 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\RegistrationForm;
 use app\models\User;
+use yii\db\ActiveRecord;
+
+/**
+ * @var app\models\User username
+ */
 
 class SiteController extends Controller
 {
@@ -110,6 +115,13 @@ class SiteController extends Controller
         return $this->render('..\books\books');
     }
 
+    /**
+     * @return string|Response
+     * @throws \yii\base\Exception
+     * @property string $user
+     * @property User $username
+     * @var $user \app\models\User
+     */
     public function actionReg()
     {
         $model = new RegistrationForm();

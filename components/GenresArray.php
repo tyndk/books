@@ -1,6 +1,10 @@
 <?php
 namespace app\components;
 
+/**
+ * @property array $genres Массив жанров
+ */
+
 use yii\base\Component;
 
 class GenresArray extends Component
