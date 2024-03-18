@@ -34,7 +34,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <header id="header">
     <?php
     NavBar::begin([
-        // 'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-light bg-light fixed-top border-bottom']
     ]);
@@ -42,11 +41,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            '<ul class="nav me-auto">', // [controller/function]
-            ['label' => 'Главная', 'url' => ['/site/index']],// 'options' => ['class' => 'text-dark']],
+            '<ul class="nav me-auto">',
+            ['label' => 'Главная', 'url' => ['/site/index']],
             ['label' => 'Список книг', 'url' => ['/books/list']],
             ['label' => 'Список авторов', 'url' => ['/books/authors']],
-            // ['label' => 'Contact', 'url' => ['/site/contact']],
             '</ul>',
             '<ul class="nav">',
             Yii::$app->user->isGuest

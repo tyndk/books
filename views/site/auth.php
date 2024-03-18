@@ -2,6 +2,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+/** @var app\models\Books $model */
+
 $this->title = 'Авторизация';
 ?>
 

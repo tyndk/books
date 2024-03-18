@@ -1,15 +1,11 @@
 <?php
 namespace app\components;
 
-/**
- * @property array $genres Массив жанров
- */
-
 use yii\base\Component;
 
 class GenresArray extends Component
 {
-    public $genres = [
+    public array $genres = [
         'Детектив' => 'Детектив',
         'Фентези' => 'Фентези',
         'Поэма' => 'Поэма',

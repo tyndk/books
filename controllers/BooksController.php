@@ -4,22 +4,18 @@ namespace app\controllers;
 use app\models\Books;
 use app\models\BooksSearch;
 use app\models\Authors;
-use yii\helpers\ArrayHelper;
-use PharIo\Manifest\Author;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\imagine\Image;
-use yii\helpers\Html;
 
 /** @var \app\models\Books|null $model */
 
 class BooksController extends \yii\web\Controller
 {
 
-    private function uploadImage($model) 
+    private function uploadImage($model)
     {
         if (!Yii::$app->user->isGuest) 
         {
@@ -55,7 +51,7 @@ class BooksController extends \yii\web\Controller
             else
             {
                 if ($model->save()) {
-                    //Yii::$app->session->setFlash('success', 'Книга обновлена');
+                    Yii::$app->session->setFlash('success', 'Книга обновлена');
                 } else {
                     Yii::$app->session->setFlash('error', 'Ошибка при добавлении: '. implode(', ', array_values($model->getFirstErrors())));
                     return null;
@@ -106,9 +102,8 @@ class BooksController extends \yii\web\Controller
                     if ($author)
                     {
                         $model->author_id = $author->id;
+                        $this->uploadImage($model);
 
-                        //$imagePath = $this->uploadImage($model);
-                        
                         return $this->redirect(['/books']);
                     } else {
                         Yii::$app->session->setFlash('error', 'Выбранный автор не найден.');
@@ -118,11 +113,11 @@ class BooksController extends \yii\web\Controller
             } 
             else
             {
-            //$el = Books::find()->all();
+            $el = Books::find()->all();
 
             return $this->render('list', [
                 'model' => $model,
-                //'books' => $el,
+                'books' => $el,
                 'authors' => $authors
             ]);
             }
@@ -196,11 +191,11 @@ class BooksController extends \yii\web\Controller
 
                     $newImage = UploadedFile::getInstance($model, 'image');
                     if ($newImage == null) {
-                        $model->image = $oldImage; //null;
-                        $model->thumbnail = $oldImageThumb; //null;
+                        $model->image = $oldImage;
+                        $model->thumbnail = $oldImageThumb;
                     } else {
                         $imagePath = $this->uploadImage($model);
-                        if ($oldImage !== null && $oldImage !== null) {
+                        if ($oldImage !== null && $oldImageThumb !== null) {
                             unlink($oldImage);
                             unlink($oldImageThumb);
                         }
@@ -250,8 +245,7 @@ class BooksController extends \yii\web\Controller
     }
 
     public function actionAuthors()
-    {  
-        //$model = Books::find()->all();
+    {
         $author = new Authors();
 
         if (!Yii::$app->user->isGuest) 
@@ -260,14 +254,12 @@ class BooksController extends \yii\web\Controller
             {
                 if ($author->load(Yii::$app->request->post()) && $author->validate())
                 {
-                    //$authorName = strip_tags($author->name);
                     $author->save();
                     return $this->refresh();
                 }
             }
         }
             return $this->render('authors', [
-                //'model' => $model,
                 'author' => $author
                 ]);
         

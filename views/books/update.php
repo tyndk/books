@@ -1,11 +1,11 @@
 <?php
 /** @var yii\web\View $this */
 /** @var app\models\Authors $author */
+/** @var app\models\Books $model */
 
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use app\models\Authors;
-use yii\helpers\Url;
 
 $authors = Authors::find()->all();
 $authors_el = [];

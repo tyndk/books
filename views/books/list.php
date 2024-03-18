@@ -10,17 +10,14 @@
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var yii\grid\GridView $searchModel
 
+/**
+ * @property app\components\GenresArray GenresArray
  */
-// * @property app\components\GenresArray GenresArray
-// * @property array $genres
+
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
-use yii\data\ActiveDataProvider;
-use app\models\Books;
-use app\models\BooksSearch;
 use app\models\Authors;
 use yii\grid\GridView;
-
 
 $this->title = 'Список книг';
 
@@ -55,7 +52,8 @@ foreach ($authors as $el) {
     </datalist>
     <?= $form->field($model, 'title')->textInput(['class' => 'form-control required-label']) ?>
     <?= $form->field($model, 'year')->input('number', ['class' => 'form-control']) ?>
-    <?= $form->field($model, 'genre')->dropDownList(Yii::$app->GenresArray->genres, ['class' => 'form-control']) ?>
+    <?=    /** @noinspection PhpUndefinedFieldInspection */
+        $form->field($model, 'genre')->dropDownList(Yii::$app->GenresArray->genres, ['class' => 'form-control']) ?>
     <?= $form->field($model, 'image')->fileInput(['class' => 'form-control']) ?>
     <?= $form->field($model, 'pages')->input('number', ['class' => 'form-control']) ?>
     <?= Html::submitButton('Добавить', ['class' => 'mt-3 w-100 btn btn-primary', 'name' => 'book-button']) ?>

@@ -1,10 +1,12 @@
 <?php
-use app\models\Authors;
-use app\models\Books;
-use yii\data\ActiveDataProvider;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
+
+/**
+ * @var app\models\Authors $author
+ * @var yii\data\ActiveDataProvider $dataProvider
+ */
 
 $default_img = 'default.png';
 ?>
@@ -85,5 +87,3 @@ foreach ($dataProvider->models as $book) {
         document.getElementById('cancelButton').classList.toggle('d-none');
     });
 </script>
-
-<!-- <a href="<?= Url::toRoute(['update', 'id'=>$author->id]) ?>"><button  id="editButton" class="btn btn-primary btn-sm">Изменить</button></a> -->

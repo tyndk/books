@@ -15,6 +15,5 @@ $this->title = 'My Yii Application';
             <li>Добавление и изменение записей доступно после регистрации.</li>
         </ul>
         <p class="lead">Главные ссылки указаны в шапке сайта.</p>
-        <!-- <p><a class="btn btn-lg btn-primary" href="<?= Url::toRoute('/books/list', $schema = true) ?>">Просмотр книг</a></p> -->
     </div>
 </div>

@@ -5,7 +5,6 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap5\ActiveForm;
 
 $default_img = 'uploads/default.png';
 if ($model->thumbnail) {

@@ -15,6 +15,7 @@ use yii\data\ActiveDataProvider;
  * @property int $year
  * @property string $genre
  * @property string $image
+ * @property string $thumbnail
  * @property int $pages
  */
 class Books extends \yii\db\ActiveRecord

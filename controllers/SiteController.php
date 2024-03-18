@@ -8,13 +8,11 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
 use app\models\RegistrationForm;
 use app\models\User;
-use yii\db\ActiveRecord;
 
 /**
- * @var app\models\User username
+ * @var \app\models\User username
  */
 
 class SiteController extends Controller

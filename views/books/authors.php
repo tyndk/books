@@ -2,17 +2,11 @@
 /** @var app\models\Authors $author */
 
 use app\models\Authors;
-use app\models\Books;
-use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 
 $authors = Authors::find()->all();
-// $model = Books::find()->all();
-// $dataProvider = new ActiveDataProvider([
-//     'query' => Authors::findOne($model)->getBooks(), // Получаем связанные книги автора
-// ]);
 ?>
 
 <?php if (!Yii::$app->user->isGuest) 

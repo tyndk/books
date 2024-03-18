@@ -1,6 +1,5 @@
 <?php
 namespace app\controllers;
-use app\models\Books;
 use app\models\Authors;
 use yii\data\ActiveDataProvider;
 use Yii;
