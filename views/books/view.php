@@ -13,9 +13,12 @@ if ($model->thumbnail) {
 } else {
   $image_link = $default_img;
 };
+
+$this->title = 'Книга ' . $model->title;
 ?>
 
-<div class="card mb-3" style="max-width: 540px;">
+<h3 class="px-3 mt-5 mb-3">Просмотр книги</h3>
+<div class="card mx-3 mb-3" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4 p-3 bg-secondary text-center">
         <img src="<?= $image_link; ?>" class="img-fluid rounded" alt="<?= $model->title ?>">
@@ -36,7 +39,19 @@ if ($model->thumbnail) {
         <a href="<?= Url::toRoute(['update', 'id'=>$model->id]) ?>"><button class="btn btn-primary">Изменить</button></a>
         <a href="<?= Url::toRoute(['delete', 'id'=>$model->id]) ?>"><button class="btn btn-danger">Удалить</button></a>
         <?php } ?>
+          <div class="row m-2 mt-5">
+              <a href="<?= Url::toRoute(['read', 'id'=>$model->id]) ?>">Читать</a>
+          </div>
      </div>
     </div>
   </div>
+</div>
+
+<div class="row px-3 mt-3 justify-content-center">
+    <div class="col-lg-12">
+        <p>
+
+        </p>
+    </div>
+</div>
 </div>

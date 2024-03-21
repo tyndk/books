@@ -17,6 +17,7 @@ use yii\data\ActiveDataProvider;
  * @property string $image
  * @property string $thumbnail
  * @property int $pages
+ * @property string $text
  */
 class Books extends \yii\db\ActiveRecord
 {
@@ -42,7 +43,8 @@ class Books extends \yii\db\ActiveRecord
                 return strip_tags($value);
             }],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, ico', 'maxSize' => 1024*1280*15],
-            ['title', 'unique']
+            ['title', 'unique'],
+            ['text', 'string']
         ];
     }
 
@@ -59,6 +61,7 @@ class Books extends \yii\db\ActiveRecord
             'genre' => 'Жанр',
             'image' => 'Картинка',
             'pages' => 'Страницы',
+            'text' => 'Текст',
         ];
     }
 

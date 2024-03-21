@@ -6,6 +6,7 @@ use app\models\BooksSearch;
 use app\models\Authors;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\imagine\Image;
@@ -137,6 +138,33 @@ class BooksController extends \yii\web\Controller
         }
 
         return $this->render('view', ['model' => $model]);
+    }
+
+    public function actionRead($id)
+    {
+        $model = Books::findOne($id);
+
+        if (!$model) {
+            throw new NotFoundHttpException('Запись не найдена :(');
+        }
+
+        $text = $model->text;
+        $words = explode(' ', $text);
+        $pageSize = 500; // слов
+
+        $pagination = new Pagination([
+            'totalCount' => count($words),
+            'pageSize' => $pageSize,
+        ]);
+
+        $words = array_slice($words, $pagination->offset, $pagination->limit);
+        $currentPageText = implode(' ', $words);
+
+        return $this->render('read', [
+            'model' => $model,
+            'currentPageText' => $currentPageText,
+            'pagination' => $pagination,
+            ]);
     }
 
     public function actionDelete($id)
