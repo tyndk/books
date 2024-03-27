@@ -5,7 +5,7 @@ use app\models\Authors;
 use yii\helpers\Url;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
-
+$this->title = 'Список авторов книг';
 $authors = Authors::find()->all();
 ?>
 

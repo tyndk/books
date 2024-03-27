@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\models\Books;
 use app\models\BooksSearch;
 use app\models\Authors;
+use app\models\Comments;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
@@ -52,7 +53,7 @@ class BooksController extends \yii\web\Controller
             else
             {
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Книга обновлена');
+                    Yii::$app->session->setFlash('success', 'Книга добавлена');
                 } else {
                     Yii::$app->session->setFlash('error', 'Ошибка при добавлении: '. implode(', ', array_values($model->getFirstErrors())));
                     return null;
@@ -133,11 +134,17 @@ class BooksController extends \yii\web\Controller
     public function actionView($id)
     {
         $model = Books::findOne($id);
+
         if (!$model) {
             throw new NotFoundHttpException('Запись не найдена :(');
         }
 
-        return $this->render('view', ['model' => $model]);
+        $comment = new Comments();
+
+        return $this->render('view', [
+            'model' => $model,
+            'comment' => $comment
+        ]);
     }
 
     public function actionRead($id)
@@ -222,7 +229,7 @@ class BooksController extends \yii\web\Controller
                         $model->image = $oldImage;
                         $model->thumbnail = $oldImageThumb;
                     } else {
-                        $imagePath = $this->uploadImage($model);
+                        $this->uploadImage($model);
                         if ($oldImage !== null && $oldImageThumb !== null) {
                             unlink($oldImage);
                             unlink($oldImageThumb);
@@ -283,7 +290,7 @@ class BooksController extends \yii\web\Controller
                 if ($author->load(Yii::$app->request->post()) && $author->validate())
                 {
                     $author->save();
-                    return $this->refresh();
+                    //return $this->refresh();
                 }
             }
         }

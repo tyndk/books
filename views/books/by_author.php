@@ -7,7 +7,7 @@ use yii\helpers\Html;
  * @var app\models\Authors $author
  * @var yii\data\ActiveDataProvider $dataProvider
  */
-
+$this->title = 'Все книги ' . $author->name;
 $default_img = 'default.png';
 ?>
 

@@ -45,6 +45,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Главная', 'url' => ['/site/index']],
             ['label' => 'Список книг', 'url' => ['/books/list']],
             ['label' => 'Список авторов', 'url' => ['/books/authors']],
+            ['label' => 'Список пользователей', 'url' => ['/site/users']],
             '</ul>',
             '<ul class="nav">',
             Yii::$app->user->isGuest
