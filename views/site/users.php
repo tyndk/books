@@ -15,7 +15,7 @@ $this->title = 'Список пользователей';
             <?php 
             foreach($users as $el) { ?>
                 <li class="list-group-item">
-                    <a href="<?= Url::toRoute(['site/by_users', 'id'=>$el->id]) ?>"><?= $el->username ?></a>
+                    <a href="<?= Url::toRoute(['site/by_user', 'id'=>$el->id]) ?>"><?= $el->username ?></a>
                 </li>
             <?php } ?>
         </ul>

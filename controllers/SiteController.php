@@ -166,7 +166,7 @@ class SiteController extends Controller
         return $this->render('users');
     }
 
-    public function actionBy_users($id)
+    public function actionBy_user($id)
     {
         $user = User::findOne($id);
         $books = Books::find()->all();
@@ -205,5 +205,32 @@ class SiteController extends Controller
         } else {
             throw new NotFoundHttpException('Пользователь не найден.');
         }
+    }
+
+    public function actionUser_settings($id)
+    {
+        $user = User::findOne($id); //Yii::$app->user->identity->id; //User::findOne($id);
+
+        if ($user){
+            if ($user->load(Yii::$app->request->post())) {
+
+                if ($user->save()) {
+                    Yii::$app->session->setFlash('success', 'Информация изменена');
+                    return $this->redirect(['site/user_settings', 'id' => $id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Ошибка: ' . implode(', ', array_values($user->getFirstErrors())));
+                    return $this->redirect(['site/user_settings', 'id' => $id]);
+                }
+            }
+        }
+
+        return $this->render('../user/user_settings', [
+            'user' => $user,
+        ]);
+    }
+
+    public function actionUser_password_update($id)
+    {
+
     }
 }

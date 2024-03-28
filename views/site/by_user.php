@@ -18,6 +18,9 @@ $this->title = 'Информация о пользователе ' . $user->user
         <div class="col-md-4">
             <img src="avatar.jpg" class="img-fluid rounded-circle mb-3" alt="Аватар пользователя">
             <h3 class="px-3">Пользователь <?= $user->username ?></h3>
+            <?php if (Yii::$app->user->identity->id == $user->id) { ?>
+                <a href=" <?= Url::to(['user_settings', 'id' => $user->id]) ?>">Редактировать</a>
+            <?php } ?>
         </div>
     <div class="col-md-8">
         <h4>Список комментариев <?= '<a href="' . Url::to(['by_users_allcomments', 'id' => $user->id]) . '">(все)</a>' ?></h4>

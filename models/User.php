@@ -16,7 +16,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['username', 'email', 'password'], 'required'],
-            ['email', 'unique'],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['email'], 'email'],
         ];
     }
 
