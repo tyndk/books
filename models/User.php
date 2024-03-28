@@ -80,4 +80,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     {
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
+
+    public function getComments()
+    {
+        return $this->hasOne(Comments::class, ['user_id' => 'id']);
+    }
 }

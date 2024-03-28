@@ -13,6 +13,7 @@ $this->title = 'Читать книгу ' . $model->title;
 <h3 class="px-3 mt-5 mb-3">Книга <a href="<?= Url::toRoute(['view', 'id'=>$model->id]) ?>"><?= $model->title ?></a></h3></h3><hr>
 <div class="row px-3 mt-3 justify-content-center">
     <div class="col-lg-12 bg-light">
+        <div class="word-wrap-break">
         <p>
             <?php echo $currentPageText; ?>
         </p>
@@ -26,5 +27,6 @@ $this->title = 'Читать книгу ' . $model->title;
             'prevPageLabel' => false,
             'nextPageLabel' => false,
             ]); ?>
+        </div>
     </div>
 </div>

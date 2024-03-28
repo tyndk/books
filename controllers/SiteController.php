@@ -2,9 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Authors;
+use app\models\Books;
+use app\models\Comments;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -66,7 +71,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $books = Books::find()->orderBy(['id' => SORT_DESC])->limit(4)->all(); //all();
+        $authors = Authors::find()->all();
+
+        return $this->render('index', [
+            'books' => $books,
+            'authors' => $authors,
+        ]);
     }
 
     /**
@@ -148,5 +159,51 @@ class SiteController extends Controller
         $model = new RegistrationForm();
         
         return $this->render('auth', ['model' => $model]);
+    }
+
+    public function actionUsers()
+    {
+        return $this->render('users');
+    }
+
+    public function actionBy_users($id)
+    {
+        $user = User::findOne($id);
+        $books = Books::find()->all();
+        //$comments = Comments::findAll(['id' => $user->id]);
+
+        $query = $user->getComments()->with('book');
+
+        if ($user){
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query->orderBy(['timestamp' => SORT_DESC])->limit(3),
+            ]);
+
+        return $this->render('by_user', [
+            'dataProvider' => $dataProvider,
+            'user' => $user,
+            'books' => $books,
+        ]);
+            } else {
+        throw new NotFoundHttpException('Пользователь не найден.');
+        }
+    }
+
+    public function actionBy_users_allcomments($id)
+    {
+        $user = User::findOne($id);
+
+        if ($user){
+            $dataProvider = new ActiveDataProvider([
+                'query' => $user->getComments()->with('book'),
+            ]);
+
+        return $this->render('../user/all_comments', [
+            'dataProvider' => $dataProvider,
+            'user' => $user,
+            ]);
+        } else {
+            throw new NotFoundHttpException('Пользователь не найден.');
+        }
     }
 }

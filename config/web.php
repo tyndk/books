@@ -10,6 +10,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'ru-RU',
+    'timeZone' => 'Europe/Moscow',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -50,11 +51,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'index' => 'site/index',
                 'books' => 'books/list',
                 'view' => 'books/view',
                 'update' => 'books/update',
                 'reg' => 'site/register',
                 'authors' => 'books/authors',
+                'users' => 'site/users',
             ],
         ],
 
